@@ -7473,11 +7473,27 @@
       }
 
       /* Profile Modal Footer on Mobile: Remove redundant bottom back button, keeping top navigation header button */
+      .profile-modal-body {
+        flex: 1 1 auto !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 12px 14px max(14px, env(safe-area-inset-bottom)) !important;
+      }
+
       .profile-modal-footer {
+        position: sticky !important;
+        bottom: 0 !important;
+        flex-shrink: 0 !important;
+        background: #ffffff !important;
+        border-top: 1.5px solid #e2e8f0 !important;
+        padding: 10px 14px max(12px, env(safe-area-inset-bottom)) !important;
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        padding: 8px 12px max(10px, env(safe-area-inset-bottom)) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        box-shadow: 0 -4px 14px rgba(15, 23, 42, 0.08) !important;
+        z-index: 20 !important;
       }
 
       .profile-modal-footer .btn-profile-close {
@@ -7486,9 +7502,11 @@
 
       .btn-profile-logout-sm {
         width: 100% !important;
-        max-width: 260px !important;
-        height: 36px !important;
-        font-size: 0.78rem !important;
+        max-width: 320px !important;
+        height: 42px !important;
+        font-size: 0.88rem !important;
+        font-weight: 800 !important;
+        border-radius: 12px !important;
         justify-content: center !important;
       }
     }
@@ -8080,10 +8098,17 @@
       }
 
       .profile-modal-footer {
-        padding: 8px 10px max(10px, env(safe-area-inset-bottom)) !important;
+        position: sticky !important;
+        bottom: 0 !important;
+        flex-shrink: 0 !important;
+        background: #ffffff !important;
+        border-top: 1.5px solid #e2e8f0 !important;
+        padding: 10px 14px max(12px, env(safe-area-inset-bottom)) !important;
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
+        box-shadow: 0 -4px 14px rgba(15, 23, 42, 0.08) !important;
+        z-index: 20 !important;
       }
 
       .profile-modal-footer .btn-profile-close {
@@ -8091,12 +8116,60 @@
       }
 
       .btn-profile-logout-sm {
-        height: 34px !important;
-        font-size: 0.74rem !important;
-        padding: 0 12px !important;
+        height: 42px !important;
+        font-size: 0.88rem !important;
+        font-weight: 800 !important;
+        border-radius: 12px !important;
+        padding: 0 16px !important;
         width: 100% !important;
-        max-width: 240px !important;
+        max-width: 320px !important;
         justify-content: center !important;
+      }
+
+      /* Store Login Modal & Splash Prompt Mobile Phone Alignments */
+      #storeLoginModal {
+        padding: 12px !important;
+        box-sizing: border-box !important;
+      }
+
+      .store-login-card {
+        width: 95% !important;
+        max-width: 410px !important;
+        max-height: 92vh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        border-radius: 20px !important;
+        box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.35) !important;
+      }
+
+      .store-login-card input[type="text"],
+      .store-login-card input[type="password"] {
+        font-size: 0.92rem !important;
+        padding: 11px 12px !important;
+        border-radius: 12px !important;
+      }
+
+      .store-login-card input[type="password"] {
+        font-size: 1.15rem !important;
+        letter-spacing: 0.25em !important;
+      }
+
+      #storeSelectedBadge {
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        padding: 4px 10px !important;
+        font-size: 0.70rem !important;
+      }
+
+      #splashLandingPrompt {
+        width: 94% !important;
+        max-width: 380px !important;
+      }
+
+      #splashLandingPrompt button {
+        padding: 14px 26px !important;
+        font-size: 0.95rem !important;
+        white-space: nowrap !important;
       }
 
       .product-touch-grid {
@@ -14818,12 +14891,19 @@
 
         <!-- 📑 Stored Documents Repository Section -->
         <div>
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <div style="display: flex; align-items: center; gap: 7px;">
-              <span style="font-size: 1.05rem;">📑</span>
-              <span style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Active Store Documents Repository</span>
+          <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed #e2e8f0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 1.05rem;">📑</span>
+                <span style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Store Documents Vault</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                <span id="storeDocsCountBadge" style="font-size: 0.68rem; font-weight: 700; color: #1e293b; background: #e2e8f0; padding: 3px 9px; border-radius: 12px; white-space: nowrap;">5 Documents</span>
+                <button type="button" onclick="deleteAllStoreDocuments()" style="background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; padding: 3px 10px; border-radius: 8px; font-size: 0.70rem; font-weight: 800; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;" title="Delete all documents from vault">
+                  <span>🗑️</span> <span>Delete All</span>
+                </button>
+              </div>
             </div>
-            <span id="storeDocsCountBadge" style="font-size: 0.68rem; font-weight: 700; color: #1e293b; background: #e2e8f0; padding: 2px 8px; border-radius: 12px;">5 Documents</span>
           </div>
 
           <!-- List Container -->
@@ -16352,7 +16432,7 @@
       SUGAR CUBES
     </div>
 
-    <!-- Mouse Scroll & Click Indicator (Moved UP directly under SUGAR CUBES, clean without pink bg glow) -->
+    <!-- Mouse Scroll & Click Indicator (Step 1 / Image 1) -->
     <div id="bottomScrollIndicator" onclick="revealSplashPrompt()" style="position: absolute; top: calc(44% + 58px); left: 50%; transform: translateX(-50%); z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; pointer-events: auto; transition: opacity 0.4s ease, transform 0.4s ease; user-select: none;">
       <!-- Pink Outline Mouse Capsule Icon (Clean, no bg glow) -->
       <div style="width: 22px; height: 36px; border: 2.2px solid #f472b6; border-radius: 12px; position: relative; display: flex; justify-content: center;">
@@ -16364,7 +16444,7 @@
     </div>
 
 
-    <!-- Initial Landing Splash Prompt ("This part" - Revealed ONLY when user scrolls down) -->
+    <!-- Initial Landing Splash Prompt (Step 2 / Image 2) -->
     <div id="splashLandingPrompt" style="position: relative; z-index: 5; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; opacity: 0; transform: translateY(40px) scale(0.95); pointer-events: none; visibility: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer;" onclick="revealStoreLoginPortal(event)">
       <div style="width: 110px; height: 110px; background: #ffffff; border-radius: 26px; padding: 8px; box-shadow: 0 14px 35px rgba(236, 72, 153, 0.22), 0 4px 14px rgba(15, 23, 42, 0.08); border: 1.5px solid #fbcfe8; animation: floatBounce 3s ease-in-out infinite;">
         <img src="assets/sugar_cubes_logo.png" alt="Sugar Cubes" style="width: 100%; height: 100%; object-fit: cover; border-radius: 18px;">
@@ -16376,7 +16456,7 @@
       <p style="margin: 0; font-size: 0.8rem; font-weight: 700; color: #64748b; letter-spacing: 0.03em;">Click anywhere on screen to open store login portal</p>
     </div>
 
-    <!-- The Login Card (Revealed after clicking background or splash button) -->
+    <!-- The Login Card (Step 3 / Image 3) -->
     <div id="storeLoginCard" class="store-login-card" onclick="event.stopPropagation()" style="display: none; opacity: 0; position: relative; z-index: 10; background: #ffffff; border-radius: 24px; max-width: 440px; width: 100%; margin: 0 auto; box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.3), 0 10px 30px -5px rgba(15, 23, 42, 0.15); overflow: hidden; border: 1.5px solid #e2e8f0; transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);">
       
       <!-- Login Header with Vibrant Aesthetic Pink Gradient -->
@@ -16403,7 +16483,7 @@
             <span style="font-size: 0.88rem; font-weight: 800; color: #0f172a; display: block;">📍 Sugar Cubes Bakery</span>
             <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;" id="storeSubtitle">Click to select store register</span>
           </div>
-          <span id="storeSelectedBadge" style="background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; border-radius: 20px; padding: 3px 10px; font-size: 0.72rem; font-weight: 800; transition: all 0.2s;">Tap to Select</span>
+          <span id="storeSelectedBadge" style="background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-size: 0.72rem; font-weight: 800; white-space: nowrap; flex-shrink: 0; transition: all 0.2s;">Tap to Select</span>
         </div>
       </div>
 
@@ -16412,7 +16492,7 @@
         
         <div>
           <label style="font-size: 0.75rem; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Store ID / Email</label>
-          <input type="text" id="loginStoreCode" placeholder="Click store above or enter STORE01" value="" required style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.95rem; font-weight: 700; color: #0f172a; box-sizing: border-box;">
+          <input type="text" id="loginStoreCode" placeholder="Tap store above or enter STORE01" value="" required style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.95rem; font-weight: 700; color: #0f172a; box-sizing: border-box;">
         </div>
 
         <div>
@@ -26706,9 +26786,9 @@ Sugar Cubes Artisanal Cake Shop & Bakery • Coimbatore`;
       function getStoredDocuments() {
         try {
           const raw = localStorage.getItem('sugarCubesStoreDocuments');
-          if (raw) {
+          if (raw !== null) {
             const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+            if (Array.isArray(parsed)) return parsed;
           }
         } catch (e) {}
         return DEFAULT_STORE_DOCUMENTS;
@@ -26798,26 +26878,26 @@ Sugar Cubes Artisanal Cake Shop & Bakery • Coimbatore`;
                 </div>
               </div>
 
-              <!-- Bottom: 4 Action Buttons Row (View, Download, Edit, Delete) -->
-              <div style="display: flex; align-items: center; gap: 6px; justify-content: flex-end; padding-top: 6px; border-top: 1px dashed #f1f5f9; flex-wrap: wrap;">
-                <!-- 👁️ View Button: Opens preview only -->
-                <button type="button" class="btn-doc-action-view" onclick="previewStoreDocument('${doc.id}')" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; padding: 5px 11px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="Open and preview document">
-                  <span>👁️ View</span>
+              <!-- Bottom: 4 Action Buttons Grid (View, Save, Edit, Delete) -->
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; width: 100%; padding-top: 8px; border-top: 1px dashed #f1f5f9; box-sizing: border-box;">
+                <!-- 👁️ View Button -->
+                <button type="button" class="btn-doc-action-view" onclick="previewStoreDocument('${doc.id}')" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; padding: 6px 2px; border-radius: 8px; font-size: 0.70rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 3px; width: 100%; text-align: center; box-sizing: border-box; white-space: nowrap;" title="Open and preview document">
+                  <span>👁️</span> <span>View</span>
                 </button>
 
-                <!-- ⬇️ Download Button: Directly downloads file -->
-                <button type="button" class="btn-doc-action-download" onclick="downloadStoreDocument('${doc.id}')" style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 5px 11px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="Download document to device">
-                  <span>⬇️ Download</span>
+                <!-- ⬇️ Save Button -->
+                <button type="button" class="btn-doc-action-download" onclick="downloadStoreDocument('${doc.id}')" style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 6px 2px; border-radius: 8px; font-size: 0.70rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 3px; width: 100%; text-align: center; box-sizing: border-box; white-space: nowrap;" title="Download document to device">
+                  <span>⬇️</span> <span>Save</span>
                 </button>
 
-                <!-- ✏️ Edit Button: Edit title & category -->
-                <button type="button" class="btn-doc-action-edit" onclick="openEditStoreDocumentModal('${doc.id}')" style="background: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 5px 10px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;" title="Edit document name or category">
-                  <span>✏️ Edit</span>
+                <!-- ✏️ Edit Button -->
+                <button type="button" class="btn-doc-action-edit" onclick="openEditStoreDocumentModal('${doc.id}')" style="background: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 6px 2px; border-radius: 8px; font-size: 0.70rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 3px; width: 100%; text-align: center; box-sizing: border-box; white-space: nowrap;" title="Edit document name or category">
+                  <span>✏️</span> <span>Edit</span>
                 </button>
 
-                <!-- 🗑️ Delete Button: Remove document -->
-                <button type="button" class="btn-doc-action-delete" onclick="deleteStoreDocument('${doc.id}')" style="background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; padding: 5px 9px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;" title="Delete document">
-                  <span>🗑️</span>
+                <!-- 🗑️ Delete Button -->
+                <button type="button" class="btn-doc-action-delete" onclick="deleteStoreDocument('${doc.id}')" style="background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; padding: 6px 2px; border-radius: 8px; font-size: 0.70rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 3px; width: 100%; text-align: center; box-sizing: border-box; white-space: nowrap;" title="Delete document">
+                  <span>🗑️</span> <span>Delete</span>
                 </button>
               </div>
             </div>
@@ -27124,6 +27204,22 @@ Sugar Cubes Artisanal Cake Shop & Bakery • Coimbatore`;
         saveStoredDocuments(docs);
         renderStoreDocumentsList();
         if (typeof showToast === 'function') showToast(`🗑️ "${docName}" removed from vault`);
+      }
+
+      function deleteAllStoreDocuments() {
+        let docs = getStoredDocuments();
+        if (docs.length === 0) {
+          if (typeof showToast === 'function') showToast('📂 Vault is already empty.');
+          return;
+        }
+
+        if (!confirm(`Are you sure you want to delete all ${docs.length} documents from the store repository?`)) {
+          return;
+        }
+
+        saveStoredDocuments([]);
+        renderStoreDocumentsList();
+        if (typeof showToast === 'function') showToast('🗑️ All documents removed from store repository');
       }
 
       // ==========================================================================

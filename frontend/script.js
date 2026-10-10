@@ -6499,9 +6499,10 @@ function showStoreLoginModal() {
     storeModal.style.display = 'flex';
     storeModal.style.visibility = 'visible';
     storeModal.style.zIndex = '999999';
+    storeModal.style.background = 'radial-gradient(circle at 50% 35%, #f8fafc 0%, #f1f5f9 55%, #e2e8f0 100%)';
   }
 
-  // Ensure background watermark and bottom scroll indicator are visible initially
+  // Step 1 (Image 1): Display background watermark text "SUGAR CUBES" & bottom scroll indicator
   const bgWatermark = document.getElementById('bgOutlineWatermark');
   if (bgWatermark) {
     bgWatermark.style.display = 'block';
@@ -6516,8 +6517,8 @@ function showStoreLoginModal() {
     bottomHint.style.pointerEvents = 'auto';
   }
 
+  // Step 2 (Image 2): Splash prompt card (Hidden initially, revealed on scroll/click of Image 1)
   const splash = document.getElementById('splashLandingPrompt');
-  const card = document.getElementById('storeLoginCard');
   if (splash) {
     splash.style.display = 'flex';
     splash.style.visibility = 'hidden';
@@ -6525,6 +6526,9 @@ function showStoreLoginModal() {
     splash.style.transform = 'translateY(40px) scale(0.95)';
     splash.style.pointerEvents = 'none';
   }
+
+  // Step 3 (Image 3): Login Card (Hidden initially, revealed when clicking Image 2)
+  const card = document.getElementById('storeLoginCard');
   if (card) {
     card.style.display = 'none';
     card.style.opacity = '0';
@@ -10024,9 +10028,9 @@ const DEFAULT_STORE_DOCUMENTS = [
 function getStoredDocuments() {
   try {
     const raw = localStorage.getItem('sugarCubesStoreDocuments');
-    if (raw) {
+    if (raw !== null) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed)) return parsed;
     }
   } catch (e) {}
   return DEFAULT_STORE_DOCUMENTS;
@@ -10116,26 +10120,26 @@ function renderStoreDocumentsList() {
           </div>
         </div>
 
-        <!-- Bottom: 4 Action Buttons Row (View, Download, Edit, Delete) -->
-        <div style="display: flex; align-items: center; gap: 6px; justify-content: flex-end; padding-top: 6px; border-top: 1px dashed #f1f5f9; flex-wrap: wrap;">
-          <!-- 👁️ View Button: Opens preview only -->
-          <button type="button" class="btn-doc-action-view" onclick="previewStoreDocument('${doc.id}')" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; padding: 5px 11px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="Open and preview document">
-            <span>👁️ View</span>
+        <!-- Bottom: 4 Action Buttons Grid (View, Save, Edit, Delete) -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; width: 100%; padding-top: 8px; border-top: 1px dashed #f1f5f9; box-sizing: border-box;">
+          <!-- 👁️ View Button -->
+          <button type="button" class="btn-doc-action-view" onclick="previewStoreDocument('${doc.id}')" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; padding: 6px 2px; border-radius: 8px; font-size: 0.70rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 3px; width: 100%; text-align: center; box-sizing: border-box; white-space: nowrap;" title="Open and preview document">
+            <span>👁️</span> <span>View</span>
           </button>
 
-          <!-- ⬇️ Download Button: Directly downloads file -->
-          <button type="button" class="btn-doc-action-download" onclick="downloadStoreDocument('${doc.id}')" style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 5px 11px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="Download document to device">
-            <span>⬇️ Download</span>
+          <!-- ⬇️ Save Button -->
+          <button type="button" class="btn-doc-action-download" onclick="downloadStoreDocument('${doc.id}')" style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 6px 2px; border-radius: 8px; font-size: 0.70rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 3px; width: 100%; text-align: center; box-sizing: border-box; white-space: nowrap;" title="Download document to device">
+            <span>⬇️</span> <span>Save</span>
           </button>
 
-          <!-- ✏️ Edit Button: Edit title & category -->
-          <button type="button" class="btn-doc-action-edit" onclick="openEditStoreDocumentModal('${doc.id}')" style="background: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 5px 10px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;" title="Edit document name or category">
-            <span>✏️ Edit</span>
+          <!-- ✏️ Edit Button -->
+          <button type="button" class="btn-doc-action-edit" onclick="openEditStoreDocumentModal('${doc.id}')" style="background: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 6px 2px; border-radius: 8px; font-size: 0.70rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 3px; width: 100%; text-align: center; box-sizing: border-box; white-space: nowrap;" title="Edit document name or category">
+            <span>✏️</span> <span>Edit</span>
           </button>
 
-          <!-- 🗑️ Delete Button: Remove document -->
-          <button type="button" class="btn-doc-action-delete" onclick="deleteStoreDocument('${doc.id}')" style="background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; padding: 5px 9px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;" title="Delete document">
-            <span>🗑️</span>
+          <!-- 🗑️ Delete Button -->
+          <button type="button" class="btn-doc-action-delete" onclick="deleteStoreDocument('${doc.id}')" style="background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; padding: 6px 2px; border-radius: 8px; font-size: 0.70rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 3px; width: 100%; text-align: center; box-sizing: border-box; white-space: nowrap;" title="Delete document">
+            <span>🗑️</span> <span>Delete</span>
           </button>
         </div>
       </div>
@@ -10442,6 +10446,22 @@ function deleteStoreDocument(id) {
   saveStoredDocuments(docs);
   renderStoreDocumentsList();
   if (typeof showToast === 'function') showToast(`🗑️ "${docName}" removed from vault`);
+}
+
+function deleteAllStoreDocuments() {
+  let docs = getStoredDocuments();
+  if (docs.length === 0) {
+    if (typeof showToast === 'function') showToast('📂 Vault is already empty.');
+    return;
+  }
+
+  if (!confirm(`Are you sure you want to delete all ${docs.length} documents from the store repository?`)) {
+    return;
+  }
+
+  saveStoredDocuments([]);
+  renderStoreDocumentsList();
+  if (typeof showToast === 'function') showToast('🗑️ All documents removed from store repository');
 }
 
 

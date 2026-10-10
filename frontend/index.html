@@ -1521,12 +1521,19 @@
 
         <!-- 📑 Stored Documents Repository Section -->
         <div>
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <div style="display: flex; align-items: center; gap: 7px;">
-              <span style="font-size: 1.05rem;">📑</span>
-              <span style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Active Store Documents Repository</span>
+          <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed #e2e8f0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 1.05rem;">📑</span>
+                <span style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Store Documents Vault</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                <span id="storeDocsCountBadge" style="font-size: 0.68rem; font-weight: 700; color: #1e293b; background: #e2e8f0; padding: 3px 9px; border-radius: 12px; white-space: nowrap;">5 Documents</span>
+                <button type="button" onclick="deleteAllStoreDocuments()" style="background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; padding: 3px 10px; border-radius: 8px; font-size: 0.70rem; font-weight: 800; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;" title="Delete all documents from vault">
+                  <span>🗑️</span> <span>Delete All</span>
+                </button>
+              </div>
             </div>
-            <span id="storeDocsCountBadge" style="font-size: 0.68rem; font-weight: 700; color: #1e293b; background: #e2e8f0; padding: 2px 8px; border-radius: 12px;">5 Documents</span>
           </div>
 
           <!-- List Container -->
@@ -2807,6 +2814,7 @@
     </div>
 
     <!-- Mouse Scroll & Click Indicator (Moved UP directly under SUGAR CUBES, clean without pink bg glow) -->
+    <!-- Mouse Scroll & Click Indicator (Step 1 / Image 1) -->
     <div id="bottomScrollIndicator" onclick="revealSplashPrompt()" style="position: absolute; top: calc(44% + 58px); left: 50%; transform: translateX(-50%); z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; pointer-events: auto; transition: opacity 0.4s ease, transform 0.4s ease; user-select: none;">
       <!-- Pink Outline Mouse Capsule Icon (Clean, no bg glow) -->
       <div style="width: 22px; height: 36px; border: 2.2px solid #f472b6; border-radius: 12px; position: relative; display: flex; justify-content: center;">
@@ -2818,7 +2826,7 @@
     </div>
 
 
-    <!-- Initial Landing Splash Prompt ("This part" - Revealed ONLY when user scrolls down) -->
+    <!-- Initial Landing Splash Prompt (Step 2 / Image 2) -->
     <div id="splashLandingPrompt" style="position: relative; z-index: 5; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; opacity: 0; transform: translateY(40px) scale(0.95); pointer-events: none; visibility: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer;" onclick="revealStoreLoginPortal(event)">
       <div style="width: 110px; height: 110px; background: #ffffff; border-radius: 26px; padding: 8px; box-shadow: 0 14px 35px rgba(236, 72, 153, 0.22), 0 4px 14px rgba(15, 23, 42, 0.08); border: 1.5px solid #fbcfe8; animation: floatBounce 3s ease-in-out infinite;">
         <img src="assets/sugar_cubes_logo.png" alt="Sugar Cubes" style="width: 100%; height: 100%; object-fit: cover; border-radius: 18px;">
@@ -2830,7 +2838,7 @@
       <p style="margin: 0; font-size: 0.8rem; font-weight: 700; color: #64748b; letter-spacing: 0.03em;">Click anywhere on screen to open store login portal</p>
     </div>
 
-    <!-- The Login Card (Revealed after clicking background or splash button) -->
+    <!-- The Login Card (Step 3 / Image 3) -->
     <div id="storeLoginCard" class="store-login-card" onclick="event.stopPropagation()" style="display: none; opacity: 0; position: relative; z-index: 10; background: #ffffff; border-radius: 24px; max-width: 440px; width: 100%; margin: 0 auto; box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.3), 0 10px 30px -5px rgba(15, 23, 42, 0.15); overflow: hidden; border: 1.5px solid #e2e8f0; transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);">
       
       <!-- Login Header with Vibrant Aesthetic Pink Gradient -->
@@ -2857,7 +2865,7 @@
             <span style="font-size: 0.88rem; font-weight: 800; color: #0f172a; display: block;">📍 Sugar Cubes Bakery</span>
             <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;" id="storeSubtitle">Click to select store register</span>
           </div>
-          <span id="storeSelectedBadge" style="background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; border-radius: 20px; padding: 3px 10px; font-size: 0.72rem; font-weight: 800; transition: all 0.2s;">Tap to Select</span>
+          <span id="storeSelectedBadge" style="background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-size: 0.72rem; font-weight: 800; white-space: nowrap; flex-shrink: 0; transition: all 0.2s;">Tap to Select</span>
         </div>
       </div>
 
@@ -2866,7 +2874,7 @@
         
         <div>
           <label style="font-size: 0.75rem; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Store ID / Email</label>
-          <input type="text" id="loginStoreCode" placeholder="Click store above or enter STORE01" value="" required style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.95rem; font-weight: 700; color: #0f172a; box-sizing: border-box;">
+          <input type="text" id="loginStoreCode" placeholder="Tap store above or enter STORE01" value="" required style="width: 100%; padding: 12px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.95rem; font-weight: 700; color: #0f172a; box-sizing: border-box;">
         </div>
 
         <div>

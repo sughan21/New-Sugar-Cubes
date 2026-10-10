@@ -5562,6 +5562,14 @@ html.auth-pending .mobile-view-header {
   background: #1da851;
 }
 
+/* Modal Body */
+.profile-modal-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 14px;
+}
+
 /* Modal Footer */
 .profile-modal-footer {
   padding: 10px 14px;
@@ -7351,11 +7359,27 @@ html.auth-pending .mobile-view-header {
   }
 
   /* Profile Modal Footer on Mobile: Remove redundant bottom back button, keeping top navigation header button */
+  .profile-modal-body {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 12px 14px max(14px, env(safe-area-inset-bottom)) !important;
+  }
+
   .profile-modal-footer {
+    position: sticky !important;
+    bottom: 0 !important;
+    flex-shrink: 0 !important;
+    background: #ffffff !important;
+    border-top: 1.5px solid #e2e8f0 !important;
+    padding: 10px 14px max(12px, env(safe-area-inset-bottom)) !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    padding: 8px 12px max(10px, env(safe-area-inset-bottom)) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 -4px 14px rgba(15, 23, 42, 0.08) !important;
+    z-index: 20 !important;
   }
 
   .profile-modal-footer .btn-profile-close {
@@ -7364,9 +7388,11 @@ html.auth-pending .mobile-view-header {
 
   .btn-profile-logout-sm {
     width: 100% !important;
-    max-width: 260px !important;
-    height: 36px !important;
-    font-size: 0.78rem !important;
+    max-width: 320px !important;
+    height: 42px !important;
+    font-size: 0.88rem !important;
+    font-weight: 800 !important;
+    border-radius: 12px !important;
     justify-content: center !important;
   }
 }
@@ -7957,10 +7983,17 @@ html.auth-pending .mobile-view-header {
   }
 
   .profile-modal-footer {
-    padding: 8px 10px max(10px, env(safe-area-inset-bottom)) !important;
+    position: sticky !important;
+    bottom: 0 !important;
+    flex-shrink: 0 !important;
+    background: #ffffff !important;
+    border-top: 1.5px solid #e2e8f0 !important;
+    padding: 10px 14px max(12px, env(safe-area-inset-bottom)) !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
+    box-shadow: 0 -4px 14px rgba(15, 23, 42, 0.08) !important;
+    z-index: 20 !important;
   }
 
   .profile-modal-footer .btn-profile-close {
@@ -7968,11 +8001,13 @@ html.auth-pending .mobile-view-header {
   }
 
   .btn-profile-logout-sm {
-    height: 34px !important;
-    font-size: 0.74rem !important;
-    padding: 0 12px !important;
+    height: 42px !important;
+    font-size: 0.88rem !important;
+    font-weight: 800 !important;
+    border-radius: 12px !important;
+    padding: 0 16px !important;
     width: 100% !important;
-    max-width: 240px !important;
+    max-width: 320px !important;
     justify-content: center !important;
   }
 
@@ -13035,6 +13070,54 @@ html.auth-pending .mobile-view-header {
   color: #64748b;
   margin-top: 8px;
   font-style: italic;
+}
+
+/* Mobile Phone Layout Alignments for Store Login Modal & Splash Screen */
+@media (max-width: 768px) {
+  #storeLoginModal {
+    padding: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  .store-login-card {
+    width: 95% !important;
+    max-width: 410px !important;
+    max-height: 92vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.35) !important;
+  }
+
+  .store-login-card input[type="text"],
+  .store-login-card input[type="password"] {
+    font-size: 0.92rem !important;
+    padding: 11px 12px !important;
+    border-radius: 12px !important;
+  }
+
+  .store-login-card input[type="password"] {
+    font-size: 1.15rem !important;
+    letter-spacing: 0.25em !important;
+  }
+
+  #storeSelectedBadge {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    padding: 4px 10px !important;
+    font-size: 0.70rem !important;
+  }
+
+  #splashLandingPrompt {
+    width: 94% !important;
+    max-width: 380px !important;
+  }
+
+  #splashLandingPrompt button {
+    padding: 14px 26px !important;
+    font-size: 0.95rem !important;
+    white-space: nowrap !important;
+  }
 }
 
 
