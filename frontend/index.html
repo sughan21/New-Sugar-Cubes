@@ -98,13 +98,18 @@
         </div>
       </div>
 
-      <!-- Mobile Top-Corner Cashier Profile Button (Icon-Only Executive Button) -->
-      <button type="button" class="mobile-corner-profile-btn" id="mobileCornerProfileBtn" onclick="openUserProfileModal()" title="Store Cashier Profile & Sales Cockpit" aria-label="Store Profile">
-        <div class="mobile-corner-avatar-ring">
-          <span class="mobile-corner-emoji">👤</span>
-          <span class="mobile-corner-beacon" title="Live Counter Shift Active"></span>
-        </div>
-      </button>
+      <!-- Mobile Top-Corner Actions (Bell Sound Toggle & Cashier Profile Button) -->
+      <div class="mobile-corner-actions">
+        <button type="button" class="mobile-header-sound-btn" id="mobileHeaderSoundBtn" onclick="toggleAudioSound()" title="Sound: ON (Tap to mute)" aria-label="Toggle Sound">
+          <span class="mobile-sound-icon">🔔</span>
+        </button>
+        <button type="button" class="mobile-corner-profile-btn" id="mobileCornerProfileBtn" onclick="openUserProfileModal()" title="Store Cashier Profile & Sales Cockpit" aria-label="Store Profile">
+          <div class="mobile-corner-avatar-ring">
+            <span class="mobile-corner-emoji">👤</span>
+            <span class="mobile-corner-beacon" title="Live Counter Shift Active"></span>
+          </div>
+        </button>
+      </div>
     </div>
 
     <div class="header-controls">
@@ -1133,22 +1138,18 @@
       <!-- Top Header Bar with Live Clock & Sound Toggle -->
       <div class="profile-modal-header">
         <div class="profile-modal-top-row">
-          <button type="button" class="btn-profile-nav-back" id="btnProfileNavBack" onclick="closeUserProfileModal()" title="Back to Store Menu">
-            <span class="nav-back-arrow">←</span> <span class="nav-back-text">Store</span>
+          <!-- Left: Owner Executive Button (Mobile Only) -->
+          <button type="button" class="prof-shift-action-btn" onclick="openShiftActionModal()"
+            title="Owner Portal & Store Quick Actions" aria-label="Owner">
+            <span class="prof-owner-beacon"></span>
+            <span class="prof-owner-btn-text">Owner</span>
+            <span class="prof-owner-btn-icon">⚡</span>
           </button>
-          <div class="profile-user-summary">
-            <span class="profile-avatar-emoji">👤</span>
-            <div class="profile-user-texts">
-              <span class="profile-user-title" id="profileModalFullName">Store Manager</span>
-              <span class="profile-user-email" id="profileModalEmail" style="font-size: 12px; color: #475569; font-weight: 500;">admin@sugarcubes.com</span>
-              <span class="profile-user-shift"><span class="prof-beacon-dot"></span> Live Shift • Counter #1</span>
-            </div>
-          </div>
+
+          <!-- Right: Dismiss / Back to Store Symbol Button -->
           <div class="profile-header-actions">
-            <button type="button" class="prof-sound-toggle-btn" id="profSoundToggleBtn" onclick="toggleAudioSound()" title="Toggle POS sound effects">
-              🔔 Sound: ON
-            </button>
-            <button type="button" class="modal-close-x profile-close-btn" onclick="closeUserProfileModal()" title="Back to Store Menu">✕</button>
+            <button type="button" class="modal-close-x profile-close-btn" onclick="closeUserProfileModal()"
+              title="Back to Store Menu" aria-label="Back to Store">✕</button>
           </div>
         </div>
 
@@ -1284,26 +1285,20 @@
     <div class="modal-window-card" style="max-width: 660px; width: 92%; border-radius: 20px; overflow: hidden; box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1); border: none;" onclick="event.stopPropagation()">
       
       <!-- Modal Header -->
-      <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%); color: #ffffff; padding: 18px 24px; border-bottom: 2px solid rgba(16, 185, 129, 0.4); position: relative;">
-        <div class="mobile-sheet-drag-handle" style="width: 42px; height: 5px; background: rgba(255, 255, 255, 0.35); border-radius: 4px; margin: 0 auto 14px auto; display: none;"></div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <div style="width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.15) 100%); border: 1.5px solid rgba(52, 211, 153, 0.4); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);">
-            ⚡
-          </div>
-          <div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: #ffffff; letter-spacing: -0.3px;">
-                Staff & Store Quick Actions
-              </h3>
-              <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; letter-spacing: 0.3px; text-transform: uppercase;">Portal</span>
+      <div class="shift-modal-header">
+        <div class="mobile-sheet-drag-handle"></div>
+        <div class="shift-modal-header-main">
+          <div class="shift-modal-header-left">
+            <div class="shift-modal-icon-badge">⚡</div>
+            <div class="shift-modal-text-group">
+              <div class="shift-modal-title-row">
+                <h3 class="shift-modal-title">Staff & Store Quick Actions</h3>
+                <span class="shift-modal-portal-badge">Portal</span>
+              </div>
+              <p class="shift-modal-subtitle">Cashier Utilities & Management Directory</p>
             </div>
-            <p style="margin: 3px 0 0; font-size: 0.78rem; color: #94a3b8; font-weight: 600;">
-              Cashier Utilities & Management Directory
-            </p>
           </div>
-        </div>
-        <button type="button" class="modal-close-x" style="color: #cbd5e1; font-size: 1.2rem; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); width: 34px; height: 34px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onclick="closeShiftActionModal()" onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.color='#cbd5e1'; this.style.background='rgba(255,255,255,0.08)'">✕</button>
+          <button type="button" class="modal-close-x shift-modal-close-btn" onclick="closeShiftActionModal()" title="Close Quick Actions">✕</button>
         </div>
       </div>
 
@@ -1350,40 +1345,25 @@
             </button>
           </div>
 
-          <!-- Step 3: Staff Roster & Registered Accounts Directory -->
-          <div class="step-action-row" onclick="openResignReloginModal();" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+          <!-- Step 3: Store Franchise & Building Documents -->
+          <div class="step-action-row" onclick="openStoreDocumentsModal();" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="background: #fdf2f8; color: #db2777; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #fbcfe8; white-space: nowrap;">STEP 03</span>
-              <span style="font-size: 1.2rem;">👥</span>
+              <span style="background: #e0e7ff; color: #4338ca; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #c7d2fe; white-space: nowrap;">STEP 03</span>
+              <span style="font-size: 1.2rem;">📁</span>
               <div>
-                <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Registered Accounts Directory</div>
-                <div style="font-size: 0.74rem; color: #64748b; margin-top: 1px;">Switch active cashier account, re-authenticate or resign</div>
+                <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Store Franchise & Building Documents</div>
+                <div style="font-size: 0.74rem; color: #64748b; margin-top: 1px;">Upload & access franchise agreements, building lease & licenses</div>
               </div>
             </div>
-            <button type="button" style="background: #fdf2f8; color: #be185d; border: 1px solid #fbcfe8; padding: 6px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
-              Manage Directory <span>→</span>
+            <button type="button" style="background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; padding: 6px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+              Upload Documents <span>→</span>
             </button>
           </div>
 
-          <!-- Step 4: Lock Terminal -->
-          <div class="step-action-row" onclick="closeShiftActionModal(); logoutUser();" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="background: #fff1f2; color: #e11d48; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #fecdd3; white-space: nowrap;">STEP 04</span>
-              <span style="font-size: 1.2rem;">🔒</span>
-              <div>
-                <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Lock Register Terminal</div>
-                <div style="font-size: 0.74rem; color: #64748b; margin-top: 1px;">Safely sign out active cashier and lock POS register terminal</div>
-              </div>
-            </div>
-            <button type="button" style="background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; padding: 6px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
-              Lock Register <span>→</span>
-            </button>
-          </div>
-
-          <!-- Step 5: Full System Reset -->
+          <!-- Step 4: Full System Reset -->
           <div class="step-action-row" onclick="closeShiftActionModal(); clearAllSalesAndLogoutSystem();" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="background: #fffbe3; color: #b45309; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #fde68a; white-space: nowrap;">STEP 05</span>
+              <span style="background: #fffbe3; color: #b45309; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #fde68a; white-space: nowrap;">STEP 04</span>
               <span style="font-size: 1.2rem;">🔄</span>
               <div>
                 <div style="font-weight: 800; font-size: 0.88rem; color: #9f1239;">Reset All Records & Restart</div>
@@ -1400,12 +1380,12 @@
       </div>
 
       <!-- Modal Footer -->
-      <div style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+      <div class="shift-modal-footer" style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 8px; font-size: 0.78rem; font-weight: 700; color: #64748b;">
           <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #10b981;"></span>
           Store Management Portal
         </div>
-        <button type="button" onclick="closeShiftActionModal()" style="background: #ffffff; color: #334155; border: 1.5px solid #cbd5e1; padding: 9px 22px; border-radius: 10px; font-weight: 800; font-size: 0.82rem; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.03);" onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff'; this.style.borderColor='#cbd5e1';">
+        <button type="button" class="shift-modal-footer-close-btn" onclick="closeShiftActionModal()" style="background: #ffffff; color: #334155; border: 1.5px solid #cbd5e1; padding: 9px 22px; border-radius: 10px; font-weight: 800; font-size: 0.82rem; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.03);" onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff'; this.style.borderColor='#cbd5e1';">
           ✕ Close Window
         </button>
       </div>
@@ -1441,7 +1421,7 @@
       <div style="padding: 18px; overflow-y: auto; flex: 1; background: #ffffff; display: flex; flex-direction: column; gap: 14px;">
 
         <!-- 👥 Registered Accounts & Email Directory Card -->
-        <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+        <div class="prof-registered-users-card" style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #f1f5f9;">
             <div style="display: flex; align-items: center; gap: 8px;">
               <span style="font-size: 1.1rem;">👥</span>
@@ -1460,6 +1440,208 @@
       <div style="padding: 12px 16px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; align-items: center;">
         <button type="button" onclick="closeResignReloginModal()" style="background: #ffffff; color: #334155; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
           ✕ Close Window
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Modal: Store Franchise & Building Documents Vault Modal
+       ========================================================================= -->
+  <div id="storeDocumentsModal" class="modal-backdrop" style="display: none; z-index: 10070;" onclick="closeStoreDocumentsModalOnBackdrop(event)">
+    <div class="modal-window-card store-docs-modal-card" style="max-width: 580px; width: 94%; max-height: 88vh; display: flex; flex-direction: column; border-radius: 18px; overflow: hidden; box-shadow: 0 24px 54px rgba(15, 23, 42, 0.4);" onclick="event.stopPropagation()">
+
+      <!-- Modal Header: Professional Clean Layout (Mobile Optimized) -->
+      <div style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #312e81 100%); color: #ffffff; padding: 14px 16px; border-bottom: 2px solid rgba(129, 140, 248, 0.35); display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+          <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+            📁
+          </div>
+          <div style="min-width: 0; flex: 1;">
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <h3 style="margin: 0; font-size: 0.96rem; font-weight: 800; color: #ffffff; letter-spacing: -0.2px; line-height: 1.25;">
+                Franchise & Building Documents
+              </h3>
+              <span style="background: rgba(99, 102, 241, 0.25); border: 1px solid rgba(165, 180, 252, 0.4); color: #c7d2fe; font-size: 0.62rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; text-transform: uppercase; white-space: nowrap;">
+                Verified Vault
+              </span>
+            </div>
+            <p style="margin: 2px 0 0; font-size: 0.72rem; color: #94a3b8; line-height: 1.3;">
+              Official Franchise Agreements, Building Lease, NOC & Licenses
+            </p>
+          </div>
+        </div>
+        <button type="button" class="modal-close-x" style="color: #ffffff; font-size: 1.1rem; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); width: 32px; height: 32px; min-width: 32px; min-height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;" onclick="closeStoreDocumentsModal()" title="Close Documents">✕</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div style="padding: 14px 16px; overflow-y: auto; flex: 1; background: #f8fafc; display: flex; flex-direction: column; gap: 14px;">
+
+        <!-- 📤 Upload Document Card -->
+        <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 14px; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 7px;">
+              <span style="font-size: 1.05rem;">📤</span>
+              <span style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Upload Store Document</span>
+            </div>
+            <span style="font-size: 0.66rem; font-weight: 700; color: #4338ca; background: #e0e7ff; padding: 2px 8px; border-radius: 10px;">PDF, PNG, JPG</span>
+          </div>
+
+          <!-- Document Category Selector -->
+          <div style="margin-bottom: 8px;">
+            <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #475569; margin-bottom: 3px;">Document Category</label>
+            <select id="storeDocCategorySelect" style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 0.80rem; font-weight: 600; color: #1e293b; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none;">
+              <option value="Franchise Agreement">🏢 Store Franchise Agreement</option>
+              <option value="Building Lease">🏛️ Commercial Building Rental / Lease Deed</option>
+              <option value="FSSAI License">🥗 FSSAI Food Safety License</option>
+              <option value="GST Certificate">📄 GSTIN Tax Certificate</option>
+              <option value="Fire Safety NOC">🚒 Fire & Municipal Clearance NOC</option>
+              <option value="Store Insurance">🛡️ Property & Store Insurance Policy</option>
+              <option value="Other Document">📁 Other Store Legal Document</option>
+            </select>
+          </div>
+
+          <!-- Document Title / Description -->
+          <div style="margin-bottom: 10px;">
+            <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #475569; margin-bottom: 3px;">Document Label / Reference (Optional)</label>
+            <input type="text" id="storeDocTitleInput" placeholder="e.g. Sugar Cubes Franchise 2026-2031, Lease Unit #4" style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 0.80rem; color: #1e293b; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none;">
+          </div>
+
+          <!-- Hidden File Input -->
+          <input type="file" id="storeDocFileInput" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" style="display: none;" onchange="handleStoreDocFileSelected(event)">
+
+          <!-- Upload Trigger Button Area -->
+          <div onclick="document.getElementById('storeDocFileInput').click()" style="border: 2px dashed #818cf8; background: #eef2ff; border-radius: 10px; padding: 14px 12px; text-align: center; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.background='#e0e7ff'" onmouseout="this.style.background='#eef2ff'">
+            <div style="font-size: 1.6rem; margin-bottom: 2px;">📄</div>
+            <div style="font-weight: 800; font-size: 0.84rem; color: #3730a3;">Tap to Select & Upload Document</div>
+            <div style="font-size: 0.70rem; color: #6366f1; margin-top: 2px;">PDF, Images or Documents (Auto-saved)</div>
+          </div>
+        </div>
+
+        <!-- 📑 Stored Documents Repository Section -->
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 7px;">
+              <span style="font-size: 1.05rem;">📑</span>
+              <span style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Active Store Documents Repository</span>
+            </div>
+            <span id="storeDocsCountBadge" style="font-size: 0.68rem; font-weight: 700; color: #1e293b; background: #e2e8f0; padding: 2px 8px; border-radius: 12px;">5 Documents</span>
+          </div>
+
+          <!-- List Container -->
+          <div id="storeDocsListContainer" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Rendered dynamically by renderStoreDocumentsList() -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div style="padding: 10px 16px max(12px, env(safe-area-inset-bottom, 0px)); background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.74rem; color: #475569; font-weight: 700;">
+          <span style="width: 7px; height: 7px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 6px #10b981;"></span>
+          <span>Store Vault Active</span>
+        </div>
+        <button type="button" onclick="closeStoreDocumentsModal()" style="background: #ffffff; color: #334155; border: 1.5px solid #cbd5e1; padding: 7px 16px; border-radius: 8px; font-weight: 800; font-size: 0.80rem; cursor: pointer; transition: all 0.2s ease;">
+          ✕ Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Modal: Document Live In-App Preview Modal (Opens on "View" Click)
+       ========================================================================= -->
+  <div id="storeDocPreviewModal" class="modal-backdrop" style="display: none; z-index: 10080;" onclick="closeStoreDocPreviewModalOnBackdrop(event)">
+    <div class="modal-window-card" style="max-width: 620px; width: 95%; max-height: 90vh; display: flex; flex-direction: column; border-radius: 18px; overflow: hidden; box-shadow: 0 24px 60px rgba(15, 23, 42, 0.5); background: #ffffff;" onclick="event.stopPropagation()">
+
+      <!-- Preview Header -->
+      <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #334155; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+          <span id="previewDocIcon" style="font-size: 1.3rem;">📄</span>
+          <div style="min-width: 0; flex: 1;">
+            <h4 id="previewDocTitle" style="margin: 0; font-size: 0.92rem; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              Document Preview
+            </h4>
+            <span id="previewDocCategoryBadge" style="font-size: 0.64rem; font-weight: 700; color: #93c5fd; background: rgba(59, 130, 246, 0.2); padding: 1px 6px; border-radius: 4px; display: inline-block; margin-top: 2px;">
+              Category
+            </span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+          <button type="button" id="previewDownloadBtn" style="background: #10b981; color: #ffffff; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 800; font-size: 0.74rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <span>⬇️</span> <span>Download</span>
+          </button>
+          <button type="button" class="modal-close-x" onclick="closeStoreDocPreviewModal()" style="color: #ffffff; font-size: 1.1rem; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">✕</button>
+        </div>
+      </div>
+
+      <!-- Preview Content Area -->
+      <div id="previewDocContentArea" style="flex: 1; overflow-y: auto; padding: 16px; background: #f8fafc; min-height: 280px; display: flex; align-items: center; justify-content: center;">
+        <!-- Injected by previewStoreDocument(id) -->
+      </div>
+
+      <!-- Preview Footer -->
+      <div style="padding: 10px 16px; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+        <span id="previewDocFooterInfo" style="font-size: 0.72rem; color: #64748b; font-weight: 600;">
+          Verified Official Store Document
+        </span>
+        <button type="button" onclick="closeStoreDocPreviewModal()" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 8px; font-weight: 800; font-size: 0.76rem; cursor: pointer;">
+          Done
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Modal: Edit Store Document Metadata Modal (Opens on "Edit" Click)
+       ========================================================================= -->
+  <div id="storeDocEditModal" class="modal-backdrop" style="display: none; z-index: 10080;" onclick="closeStoreDocEditModalOnBackdrop(event)">
+    <div class="modal-window-card" style="max-width: 440px; width: 92%; display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 48px rgba(15, 23, 42, 0.4); background: #ffffff;" onclick="event.stopPropagation()">
+
+      <!-- Edit Header -->
+      <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #ffffff; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.2rem;">✏️</span>
+          <h4 style="margin: 0; font-size: 0.94rem; font-weight: 800; color: #ffffff;">Edit Document Details</h4>
+        </div>
+        <button type="button" class="modal-close-x" onclick="closeStoreDocEditModal()" style="color: #ffffff; font-size: 1.1rem; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">✕</button>
+      </div>
+
+      <!-- Edit Form Body -->
+      <div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; background: #ffffff;">
+        <input type="hidden" id="editDocIdHidden">
+
+        <div>
+          <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #475569; margin-bottom: 4px;">Document Title / Label</label>
+          <input type="text" id="editDocTitleInput" style="width: 100%; box-sizing: border-box; padding: 8px 12px; font-size: 0.84rem; color: #0f172a; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none;">
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #475569; margin-bottom: 4px;">Document Category</label>
+          <select id="editDocCategorySelect" style="width: 100%; box-sizing: border-box; padding: 8px 12px; font-size: 0.84rem; color: #0f172a; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none; background: #ffffff;">
+            <option value="Franchise Agreement">🏢 Store Franchise Agreement</option>
+            <option value="Building Lease">🏛️ Commercial Building Rental / Lease Deed</option>
+            <option value="FSSAI License">🥗 FSSAI Food Safety License</option>
+            <option value="GST Certificate">📄 GSTIN Tax Certificate</option>
+            <option value="Fire Safety NOC">🚒 Fire & Municipal Clearance NOC</option>
+            <option value="Store Insurance">🛡️ Property & Store Insurance Policy</option>
+            <option value="Other Document">📁 Other Store Legal Document</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Edit Footer -->
+      <div style="padding: 12px 18px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 8px; flex-shrink: 0;">
+        <button type="button" onclick="closeStoreDocEditModal()" style="background: #ffffff; color: #475569; border: 1px solid #cbd5e1; padding: 7px 14px; border-radius: 8px; font-weight: 700; font-size: 0.78rem; cursor: pointer;">
+          Cancel
+        </button>
+        <button type="button" onclick="saveEditedStoreDocument()" style="background: #2563eb; color: #ffffff; border: none; padding: 7px 16px; border-radius: 8px; font-weight: 800; font-size: 0.78rem; cursor: pointer;">
+          Save Changes
         </button>
       </div>
 
@@ -2574,40 +2756,25 @@
             </button>
           </div>
 
-          <!-- Step 3: Staff Roster -->
-          <div class="step-action-row" onclick="closePosQuickActionsModal(); openResignReloginModal();" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+          <!-- Step 3: Store Franchise & Building Documents -->
+          <div class="step-action-row" onclick="openStoreDocumentsModal();" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="background: #fdf2f8; color: #db2777; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #fbcfe8; white-space: nowrap;">STEP 03</span>
-              <span style="font-size: 1.2rem;">👥</span>
+              <span style="background: #e0e7ff; color: #4338ca; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #c7d2fe; white-space: nowrap;">STEP 03</span>
+              <span style="font-size: 1.2rem;">📁</span>
               <div>
-                <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Registered Accounts Directory</div>
-                <div style="font-size: 0.74rem; color: #64748b; margin-top: 1px;">Switch active cashier account, re-authenticate or resign</div>
+                <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Store Franchise & Building Documents</div>
+                <div style="font-size: 0.74rem; color: #64748b; margin-top: 1px;">Upload & access franchise agreements, building lease & licenses</div>
               </div>
             </div>
-            <button type="button" style="background: #fdf2f8; color: #be185d; border: 1px solid #fbcfe8; padding: 6px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
-              Manage Directory <span>→</span>
+            <button type="button" style="background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; padding: 6px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+              Upload Documents <span>→</span>
             </button>
           </div>
 
-          <!-- Step 4: Lock Terminal -->
-          <div class="step-action-row" onclick="closePosQuickActionsModal(); logoutUser();" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="background: #fff1f2; color: #e11d48; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #fecdd3; white-space: nowrap;">STEP 04</span>
-              <span style="font-size: 1.2rem;">🔒</span>
-              <div>
-                <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Lock Register Terminal</div>
-                <div style="font-size: 0.74rem; color: #64748b; margin-top: 1px;">Safely sign out active cashier and lock POS register terminal</div>
-              </div>
-            </div>
-            <button type="button" style="background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; padding: 6px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
-              Lock Register <span>→</span>
-            </button>
-          </div>
-
-          <!-- Step 5: Full System Reset -->
+          <!-- Step 4: Full System Reset -->
           <div class="step-action-row" onclick="closePosQuickActionsModal(); clearAllSalesAndLogoutSystem();" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="background: #fffbe3; color: #b45309; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #fde68a; white-space: nowrap;">STEP 05</span>
+              <span style="background: #fffbe3; color: #b45309; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #fde68a; white-space: nowrap;">STEP 04</span>
               <span style="font-size: 1.2rem;">🔄</span>
               <div>
                 <div style="font-weight: 800; font-size: 0.88rem; color: #9f1239;">Reset All Records & Restart</div>

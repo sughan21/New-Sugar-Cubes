@@ -1301,13 +1301,13 @@
       display: flex;
       align-items: baseline;
       gap: 1.5px;
-      font-family: var(--font-mono);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     .product-price-currency {
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: #e11d48;
+      font-size: 0.80rem;
+      font-weight: 700;
+      color: #0f172a;
     }
 
     .product-price-figure {
@@ -1330,6 +1330,14 @@
       align-items: center;
       justify-content: center;
       transition: all 0.15s ease;
+    }
+
+    .btn-add-desktop-label {
+      display: inline;
+    }
+
+    .btn-add-mobile-label {
+      display: none;
     }
 
     .btn-card-quick-add:hover {
@@ -1482,7 +1490,7 @@
 
     @media (max-width: 768px) {
       .register-terminal-badge-btn {
-        display: inline-flex !important;
+        display: none !important; /* Moved to userProfileModal top-left header */
       }
     }
 
@@ -1836,8 +1844,9 @@
        Separate Scroll Container for Order Items
        ========================================================================== */
     .cart-items-scroll-wrap {
-      min-height: 80px;
-      max-height: 175px;
+      min-height: 0;
+      height: auto;
+      max-height: clamp(300px, 48vh, 520px);
       overflow-y: auto;
       overflow-x: hidden;
       padding: 4px 4px 4px 0;
@@ -1846,6 +1855,7 @@
       scroll-behavior: smooth;
       scrollbar-width: thin;
       scrollbar-color: #cbd5e1 #f8fafc;
+      transition: max-height 0.25s ease;
     }
 
     /* Custom Visible Scrollbar for Separate Cart Scroll */
@@ -1890,6 +1900,7 @@
       gap: 12px;
       box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
     }
 
     .cart-line-item:hover {
@@ -4345,49 +4356,12 @@
       max-width: calc(100vw - 32px);
     }
 
+    #posToastContainer,
     .pos-toast {
-      position: relative;
-      background: #0f172a;
-      color: #ffffff;
-      padding: 10px 18px;
-      border-radius: var(--radius-md, 12px);
-      font-size: 0.85rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-      border-left: 4px solid var(--primary, #be185d);
-      pointer-events: auto;
-      transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-      animation: slideToast 0.25s ease-out;
-    }
-
-    @keyframes slideToast {
-      from { transform: translateY(16px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    /* Laptop / Desktop Web View: Bottom Centered & 30% Opacity */
-    @media (min-width: 769px) {
-      #posToastContainer {
-        bottom: 24px;
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-        align-items: center;
-      }
-
-      .pos-toast {
-        opacity: 0.3; /* 30% Opacity on laptop web */
-        backdrop-filter: blur(6px);
-        animation: slideToastLapWeb 0.25s ease-out;
-      }
-
-      .pos-toast:hover {
-        opacity: 1 !important; /* Full 100% on mouse hover */
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-      }
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
 
     @keyframes slideToastLapWeb {
@@ -5064,6 +5038,8 @@
       display: none;
     }
 
+    .mobile-corner-actions,
+    .mobile-header-sound-btn,
     .mobile-corner-profile-btn {
       display: none;
     }
@@ -5099,7 +5075,8 @@
       flex-shrink: 0;
     }
 
-    .btn-profile-nav-back {
+    .btn-profile-nav-back,
+    .prof-shift-action-btn {
       display: none;
       /* Hidden on desktop; shown only on mobile phone viewports */
     }
@@ -5112,9 +5089,7 @@
     }
 
     .profile-user-summary {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      display: none !important;
     }
 
     .profile-avatar-emoji {
@@ -5944,29 +5919,45 @@
         touch-action: pan-y !important;
         min-height: 100vh !important;
         height: auto !important;
-        padding: 8px 8px 95px !important;
-        /* Space for bottom floating cart bar */
+        padding: 0 0 calc(10px + env(safe-area-inset-bottom, 0px)) 0 !important;
         -webkit-tap-highlight-color: transparent;
         overscroll-behavior-y: none;
       }
 
-      /* Top Header - Natural Position (No Moving/Sticky Effect) on Mobile Viewport */
+      body.has-cart-bar {
+        padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px)) !important;
+      }
+
+      /* Sticky Header Wrapper on Mobile - Full Screen Stretch */
+      .desktop-sticky-header-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Top Header - PINNED (Sticky) on Mobile Viewport across all tabs - 100% Edge-to-Edge Flush */
       .pos-app-header {
-        position: relative !important;
-        top: auto !important;
-        z-index: 100 !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
         flex-direction: column;
         align-items: stretch;
-        padding: max(8px, env(safe-area-inset-top, 0px)) 10px 8px !important;
+        padding: max(8px, env(safe-area-inset-top, 0px)) 12px 8px !important;
         gap: 0 !important;
-        margin: -8px -8px 10px -8px !important;
+        margin: 0 0 10px 0 !important;
         border-radius: 0 0 14px 14px !important;
         background: #ffffff !important;
         border-top: none !important;
         border-left: none !important;
         border-right: none !important;
         border-bottom: 1.5px solid #e2e8f0 !important;
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05) !important;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06) !important;
         touch-action: pan-y !important;
         transform: none !important;
         transition: none !important;
@@ -5978,11 +5969,12 @@
         align-items: center !important;
         width: 100% !important;
         gap: 8px !important;
+        box-sizing: border-box !important;
       }
 
       .brand-identity-left {
         display: flex !important;
-        align-items: flex-start !important;
+        align-items: center !important;
         gap: 10px !important;
         min-width: 0 !important;
         flex: 1 1 auto !important;
@@ -6083,7 +6075,61 @@
         width: fit-content !important;
       }
 
-      /* Top-Corner Cashier Profile Button on Phone View (Sleek Executive 36px Round Button) */
+      /* Top-Corner Cashier Profile & Bell Sound Buttons on Phone View */
+      .mobile-corner-actions {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-shrink: 0 !important;
+      }
+
+      .mobile-header-sound-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #ffffff !important;
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 50% !important;
+        cursor: pointer !important;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08) !important;
+        flex-shrink: 0 !important;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease !important;
+        -webkit-tap-highlight-color: transparent !important;
+        touch-action: manipulation !important;
+        position: relative !important;
+      }
+
+      .mobile-header-sound-btn:active {
+        transform: scale(0.92) !important;
+        border-color: #0f172a !important;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.15) !important;
+      }
+
+      .mobile-header-sound-btn.sound-muted {
+        background: #f1f5f9 !important;
+        border-color: #cbd5e1 !important;
+        opacity: 0.75 !important;
+      }
+
+      .mobile-sound-icon {
+        font-size: 1.15rem !important;
+        line-height: 1 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      /* Hide sound toggle from profile modal on mobile since it moved to home page */
+      .prof-sound-toggle-btn {
+        display: none !important;
+      }
+
       .mobile-corner-profile-btn {
         display: inline-flex !important;
         align-items: center !important;
@@ -6152,6 +6198,11 @@
         /* Live clock, sound toggle, and user details moved into top-corner Profile button */
       }
 
+      /* Live Time & Date Card removed from mobile phones only */
+      .prof-time-date-card {
+        display: none !important;
+      }
+
       /* Mobile: Tracking area & KPIs are housed inside the top-corner Profile button */
       .daily-track-panel {
         display: none !important;
@@ -6159,11 +6210,6 @@
 
       .daily-kpi-grid {
         display: none !important;
-      }
-
-      /* Mobile: Desktop-only Sales Page & Navigation strictly hidden */
-      .desktop-sticky-header-container {
-        display: contents !important;
       }
 
       .desktop-only-btn,
@@ -6185,7 +6231,7 @@
         padding: 4px;
         gap: 6px;
         box-shadow: var(--shadow-sm);
-        margin-bottom: 12px;
+        margin: 0 8px 12px 8px !important;
       }
 
       .mobile-nav-btn {
@@ -6228,14 +6274,20 @@
 
       /* Single Column Workspace on Mobile */
       .pos-workspace-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
+        display: flex !important;
+        flex-direction: column !important;
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 8px !important;
+        box-sizing: border-box !important;
+        gap: 16px !important;
       }
 
       .pos-left-pane,
       .pos-right-register {
-        width: 100%;
+        width: 100% !important;
+        max-width: 100% !important;
       }
 
       /* When mobile view toggle is used */
@@ -6395,22 +6447,34 @@
 
       .product-touch-grid {
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 8px !important;
+        gap: 10px !important;
+        grid-auto-rows: 1fr !important;
+        align-items: stretch !important;
         max-height: none !important;
         overflow: visible !important;
         touch-action: pan-y !important;
-        padding-bottom: 20px !important;
+        padding-bottom: 8px !important;
         padding-right: 0 !important;
       }
 
       .product-touch-card {
-        min-height: 195px;
-        padding: 0;
-        border-radius: 12px;
+        height: 100% !important;
+        min-height: 242px !important;
+        padding: 0 !important;
+        border-radius: 14px !important;
+        border: 1px solid #e2e8f0 !important;
+        background: #ffffff !important;
         touch-action: pan-y !important;
         -webkit-tap-highlight-color: transparent !important;
         user-select: none !important;
         -webkit-user-select: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        overflow: hidden !important;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+        transition: transform 0.15s ease, border-color 0.15s ease !important;
+        box-sizing: border-box !important;
       }
 
       .product-touch-card * {
@@ -6427,48 +6491,184 @@
       }
 
       .product-touch-card:active {
-        transform: scale(0.97);
+        transform: scale(0.98) !important;
       }
 
       .product-card-visual-wrap {
-        height: 100px;
+        height: 125px !important;
+        min-height: 125px !important;
+        max-height: 125px !important;
+        width: 100% !important;
+        position: relative !important;
+        background: #f8fafc !important;
+        overflow: hidden !important;
+        border-radius: 14px 14px 0 0 !important;
+        flex-shrink: 0 !important;
+      }
+
+      .product-card-img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
       }
 
       .product-card-info-wrap {
-        padding: 8px 10px 10px;
-        gap: 5px;
+        padding: 8px 10px 10px 10px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        justify-content: space-between !important;
+        background: #ffffff !important;
+        min-height: 0 !important;
+        box-sizing: border-box !important;
+      }
+
+      .product-card-cat-sub {
+        display: none !important;
       }
 
       .product-name-title {
-        font-size: 0.80rem;
-        min-height: 2.4em;
-        line-height: 1.25;
+        font-size: 0.86rem !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        height: 2.5em !important;
+        min-height: 2.5em !important;
+        max-height: 2.5em !important;
+        line-height: 1.25 !important;
+        margin: 0 0 4px 0 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        text-align: left !important;
+        letter-spacing: -0.01em !important;
       }
 
       .product-bottom-row {
-        padding-top: 6px;
-        margin-top: auto;
+        height: auto !important;
+        min-height: auto !important;
+        padding-top: 0 !important;
+        margin-top: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 6px !important;
+        border-top: none !important;
+        min-width: 0 !important;
+        width: 100% !important;
+      }
+
+      .product-price-block {
+        display: flex !important;
+        align-items: baseline !important;
+        height: 20px !important;
+        min-height: 20px !important;
+        line-height: 1 !important;
+        gap: 2px !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        flex-shrink: 0 !important;
+        transform: none !important;
+      }
+
+      .product-price-currency {
+        font-size: 0.78rem !important;
+        font-weight: 600 !important;
+        color: #334155 !important;
+        display: inline-block !important;
+        line-height: 1 !important;
+        margin-right: 1px !important;
       }
 
       .product-price-figure {
-        font-size: 0.96rem;
+        font-size: 0.96rem !important;
+        font-weight: 600 !important;
+        color: #0f172a !important;
+        letter-spacing: -0.1px !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        font-variant-numeric: tabular-nums !important;
+        line-height: 1 !important;
+        display: inline-block !important;
       }
 
       .btn-card-quick-add {
-        height: 26px;
-        padding: 0 8px;
-        font-size: 0.70rem;
+        width: 100% !important;
+        height: 32px !important;
+        min-height: 32px !important;
+        max-height: 32px !important;
+        padding: 0 10px !important;
+        border-radius: 8px !important;
+        border: 1.5px solid #10b981 !important;
+        background: #f0fdf4 !important;
+        color: #047857 !important;
+        font-size: 0.74rem !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.1px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        white-space: nowrap !important;
+        line-height: 1 !important;
+        box-shadow: 0 1px 3px rgba(16, 185, 129, 0.14) !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease !important;
+        flex-shrink: 0 !important;
+      }
+
+      .btn-card-quick-add:active {
+        transform: scale(0.95) !important;
+        background: #dcfce7 !important;
       }
 
       .product-edit-btn-floating {
-        width: 26px;
-        height: 26px;
-        font-size: 0.70rem;
+        position: absolute !important;
+        top: 8px !important;
+        right: 8px !important;
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: 8px !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 0.78rem !important;
+        z-index: 3 !important;
       }
 
       .product-stock-badge-floating {
-        font-size: 0.60rem;
-        padding: 2.5px 6px;
+        position: absolute !important;
+        top: 8px !important;
+        left: 8px !important;
+        font-size: 0.65rem !important;
+        font-weight: 800 !important;
+        padding: 3px 8px !important;
+        border-radius: 999px !important;
+        background: rgba(15, 23, 42, 0.85) !important;
+        color: #ffffff !important;
+        line-height: 1 !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+        z-index: 2 !important;
+      }
+
+      .product-special-tag {
+        position: absolute !important;
+        bottom: 8px !important;
+        left: 8px !important;
+        font-size: 0.65rem !important;
+        font-weight: 800 !important;
+        padding: 3.5px 9px !important;
+        border-radius: 999px !important;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+        color: #ffffff !important;
+        box-shadow: 0 2px 5px rgba(217, 119, 6, 0.35) !important;
+        z-index: 2 !important;
+        line-height: 1 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 3px !important;
       }
 
       /* Right Register Main Card on Mobile */
@@ -6545,61 +6745,136 @@
         border-radius: 8px;
       }
 
-      /* Compact Cart Line Items on Phone */
+      /* Auto-Aligned Cart Line Items & Scroll Clearance on Phone */
       .register-cart-container {
-        padding: 10px 14px;
-        max-height: 250px;
+        padding: 10px 14px 4px;
+        max-height: none !important;
+      }
+
+      .cart-items-scroll-wrap {
+        min-height: 0 !important;
+        height: auto !important;
+        max-height: clamp(280px, 46vh, 480px) !important;
+        overflow-y: auto !important;
+        padding-bottom: 8px !important;
       }
 
       .cart-line-item {
-        padding: 8px 10px;
-        gap: 6px;
-        border-radius: 10px;
+        padding: 8px 10px !important;
+        gap: 8px !important;
+        border-radius: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+      }
+
+      .cart-item-info {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
       }
 
       .cart-item-title {
-        font-size: 0.82rem;
+        font-size: 0.84rem !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
       }
 
       .cart-item-sub {
-        font-size: 0.7rem;
+        font-size: 0.70rem !important;
+        color: #64748b !important;
+        font-weight: 600 !important;
+        font-family: var(--font-mono) !important;
+        margin-top: 2px !important;
+      }
+
+      .cart-item-controls {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-shrink: 0 !important;
       }
 
       .cart-stepper {
-        height: 28px;
-        border-radius: 6px;
+        width: 76px !important;
+        height: 28px !important;
+        border-radius: 6px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-shrink: 0 !important;
+        background: #f1f5f9 !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 1px !important;
       }
 
       .cart-step-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 0.95rem;
-        border-radius: 5px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        -webkit-tap-highlight-color: transparent;
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 0.95rem !important;
+        border-radius: 5px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        -webkit-tap-highlight-color: transparent !important;
+        flex-shrink: 0 !important;
       }
 
       .cart-qty-text {
-        min-width: 22px;
-        font-size: 0.82rem;
-        padding: 0 4px;
+        min-width: 20px !important;
+        font-size: 0.84rem !important;
+        font-weight: 800 !important;
+        text-align: center !important;
+        padding: 0 !important;
+        flex: 1 !important;
       }
 
       .cart-item-total {
-        font-size: 0.86rem;
-        min-width: 52px;
+        font-size: 0.88rem !important;
+        font-weight: 800 !important;
+        width: 66px !important;
+        min-width: 66px !important;
+        text-align: right !important;
+        font-variant-numeric: tabular-nums !important;
+        color: #0f172a !important;
+        flex-shrink: 0 !important;
       }
 
       .cart-remove-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 0.82rem;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        -webkit-tap-highlight-color: transparent;
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 0.82rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        -webkit-tap-highlight-color: transparent !important;
+        flex-shrink: 0 !important;
+        color: #94a3b8 !important;
+      }
+
+      /* Auto-Aligned Calculation & Totals Panel */
+      .register-calc-panel {
+        padding: 10px 14px 8px !important;
+        gap: 6px !important;
+      }
+
+      .calc-row,
+      .calc-interactive-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        font-size: 0.80rem !important;
+      }
+
+      .calc-row span:last-child,
+      .calc-interactive-row > span:last-child {
+        font-variant-numeric: tabular-nums !important;
+        text-align: right !important;
+        font-weight: 700 !important;
+        min-width: 66px !important;
       }
 
       /* Action Buttons: Compact Height & Dual-Row Layout */
@@ -6896,25 +7171,68 @@
       }
 
       .hist-order-header-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 6px !important;
+        flex-wrap: wrap !important;
         padding-bottom: 6px !important;
       }
 
+      .hist-order-id-group {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-shrink: 0 !important;
+      }
+
       .hist-bill-badge {
-        font-size: 0.74rem !important;
-        padding: 2px 6px !important;
+        font-size: 0.76rem !important;
+        font-weight: 800 !important;
+        padding: 2.5px 7px !important;
+        white-space: nowrap !important;
+        display: inline-block !important;
+        flex-shrink: 0 !important;
+        letter-spacing: 0.2px !important;
+        line-height: 1.2 !important;
       }
 
       .hist-type-badge {
-        font-size: 0.64rem !important;
-        padding: 1px 6px !important;
+        font-size: 0.65rem !important;
+        font-weight: 700 !important;
+        padding: 1.5px 6px !important;
+        white-space: nowrap !important;
+        display: inline-block !important;
+        flex-shrink: 0 !important;
+        line-height: 1.2 !important;
+      }
+
+      .hist-order-price-group {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+        flex-shrink: 0 !important;
       }
 
       .hist-order-date-pill {
-        font-size: 0.68rem !important;
+        font-size: 0.70rem !important;
+        white-space: nowrap !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 3px !important;
+        flex-shrink: 0 !important;
+      }
+
+      .hist-order-date-pill * {
+        white-space: nowrap !important;
       }
 
       .hist-order-total-val {
         font-size: 1.05rem !important;
+        font-weight: 900 !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
       }
 
       .hist-order-details-box {
@@ -6923,17 +7241,39 @@
         border-radius: 8px !important;
       }
 
+      .hist-order-customer-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 6px !important;
+        flex-wrap: wrap !important;
+      }
+
+      .hist-customer-identity {
+        display: flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+        min-width: 0 !important;
+        flex: 1 !important;
+        flex-wrap: wrap !important;
+      }
+
       .hist-cust-name {
-        font-size: 0.78rem !important;
+        font-size: 0.80rem !important;
+        font-weight: 700 !important;
+        white-space: nowrap !important;
       }
 
       .hist-cust-phone {
-        font-size: 0.68rem !important;
+        font-size: 0.70rem !important;
+        white-space: nowrap !important;
       }
 
       .hist-pay-mode-badge {
         font-size: 0.64rem !important;
         padding: 1px 6px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
       }
 
       .hist-items-text {
@@ -6943,6 +7283,8 @@
       .hist-items-count-pill {
         font-size: 0.62rem !important;
         padding: 1px 5px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
       }
 
       .hist-order-actions {
@@ -6962,6 +7304,7 @@
         gap: 4px !important;
         border-radius: 8px !important;
         font-weight: 700 !important;
+        white-space: nowrap !important;
       }
 
       #orderHistoryModal .modal-card-bottom {
@@ -6978,9 +7321,13 @@
 
       .hist-mobile-cmd-dock {
         display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 8px !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
         width: 100% !important;
+      }
+
+      .btn-dock-back {
+        display: none !important;
       }
 
       .btn-hist-dock {
@@ -6988,11 +7335,11 @@
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        gap: 5px !important;
-        font-size: 0.80rem !important;
-        font-weight: 700 !important;
+        gap: 6px !important;
+        font-size: 0.82rem !important;
+        font-weight: 800 !important;
         border-radius: 10px !important;
-        padding: 0 6px !important;
+        padding: 0 10px !important;
         white-space: nowrap !important;
         cursor: pointer !important;
         transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
@@ -7048,17 +7395,27 @@
       #dailyReportModal .modal-card-bottom {
         display: flex !important;
         flex-direction: row !important;
-        justify-content: space-between !important;
+        justify-content: center !important;
         align-items: center !important;
         gap: 8px !important;
         padding: 10px 14px max(10px, env(safe-area-inset-bottom, 0px)) !important;
       }
 
+      #dailyReportModal .modal-card-bottom .btn-reg-secondary,
+      #dailyReportModal .modal-card-bottom .btn-dismiss {
+        display: none !important;
+      }
+
+      #dailyReportModal .modal-card-bottom .btn-primary-action,
       #dailyReportModal .modal-card-bottom button {
         height: 38px !important;
         font-size: 0.82rem !important;
         padding: 0 12px !important;
-        flex: 1 !important;
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        justify-content: center !important;
+        display: flex !important;
+        align-items: center !important;
         white-space: nowrap !important;
         border-radius: 8px !important;
       }
@@ -7114,20 +7471,53 @@
       .auth-brand-header h2 {
         font-size: 1.45rem;
       }
+
+      /* Profile Modal Footer on Mobile: Remove redundant bottom back button, keeping top navigation header button */
+      .profile-modal-footer {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 8px 12px max(10px, env(safe-area-inset-bottom)) !important;
+      }
+
+      .profile-modal-footer .btn-profile-close {
+        display: none !important;
+      }
+
+      .btn-profile-logout-sm {
+        width: 100% !important;
+        max-width: 260px !important;
+        height: 36px !important;
+        font-size: 0.78rem !important;
+        justify-content: center !important;
+      }
     }
 
     @media (max-width: 480px) {
       body {
-        padding: 6px 6px 95px !important;
+        padding: 0 0 calc(10px + env(safe-area-inset-bottom, 0px)) 0 !important;
       }
 
-      /* Header Calibration on Small Phones (<= 480px) */
+      body.has-cart-bar {
+        padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px)) !important;
+      }
+
+      /* Header Calibration on Small Phones (<= 480px) - PINNED Edge-to-Edge Flush */
       .pos-app-header {
-        margin: -6px -6px 10px -6px !important;
-        padding: max(8px, env(safe-area-inset-top, 0px)) 10px 8px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin: 0 0 10px 0 !important;
+        padding: max(8px, env(safe-area-inset-top, 0px)) 12px 8px !important;
         border-radius: 0 0 14px 14px !important;
-        position: relative !important;
-        top: auto !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+        background: #ffffff !important;
+        border-top: none !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-bottom: 1.5px solid #e2e8f0 !important;
       }
 
       .brand-details h1 {
@@ -7147,15 +7537,18 @@
         white-space: nowrap !important;
       }
 
+      .mobile-header-sound-btn,
       .mobile-corner-profile-btn {
         width: 38px !important;
         height: 38px !important;
         min-width: 38px !important;
         min-height: 38px !important;
         padding: 0 !important;
-        margin: 0 0 0 auto !important;
+        margin: 0 !important;
+        flex-shrink: 0 !important;
       }
 
+      .mobile-sound-icon,
       .mobile-corner-emoji {
         font-size: 1.25rem !important;
       }
@@ -7224,42 +7617,92 @@
       }
 
       .btn-profile-nav-back {
+        display: none !important;
+      }
+
+      /* Owner executive button on Profile Modal top-left */
+      .prof-shift-action-btn {
         display: inline-flex !important;
-        align-items: center;
-        gap: 6px;
-        background: rgba(255, 255, 255, 0.22) !important;
-        border: 1px solid rgba(255, 255, 255, 0.40) !important;
-        color: #ffffff !important;
-        font-size: 0.82rem !important;
+        align-items: center !important;
+        gap: 7px !important;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.20) !important;
+        color: #f8fafc !important;
+        border-radius: 20px !important;
+        padding: 6px 14px 6px 11px !important;
+        font-size: 0.78rem !important;
         font-weight: 700 !important;
-        padding: 7px 14px !important;
-        min-height: 36px !important;
-        border-radius: 8px !important;
+        letter-spacing: 0.02em !important;
         cursor: pointer !important;
-        transition: all 0.15s ease !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        touch-action: manipulation !important;
         white-space: nowrap !important;
         flex-shrink: 0 !important;
-        -webkit-tap-highlight-color: transparent !important;
-        touch-action: manipulation !important;
         user-select: none !important;
-        position: relative !important;
-        z-index: 25 !important;
       }
 
-      .btn-profile-nav-back:active {
-        transform: scale(0.92) !important;
-        background: rgba(255, 255, 255, 0.35) !important;
+      .prof-shift-action-btn:active {
+        transform: scale(0.95) !important;
+        background: rgba(255, 255, 255, 0.18) !important;
+        border-color: rgba(255, 255, 255, 0.32) !important;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
       }
 
-      .btn-profile-nav-back .nav-back-arrow {
-        font-size: 1.15rem !important;
-        line-height: 1 !important;
-        font-weight: 800 !important;
+      .prof-owner-beacon {
+        width: 7px !important;
+        height: 7px !important;
+        border-radius: 50% !important;
+        background: #10b981 !important;
+        box-shadow: 0 0 8px #10b981, 0 0 2px #34d399 !important;
+        display: inline-block !important;
+        flex-shrink: 0 !important;
       }
 
+      .prof-owner-btn-text {
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        font-size: 0.78rem !important;
+      }
+
+      .prof-owner-btn-icon {
+        font-size: 0.68rem !important;
+        opacity: 0.9 !important;
+        color: #fbbf24 !important;
+        margin-left: 1px !important;
+      }
+
+      /* Back to Store icon-only symbol button on top-right */
       .profile-close-btn {
-        display: none !important;
-        /* Mobile dedicated page uses ← Store nav button instead of popup X */
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px !important;
+        min-height: 32px !important;
+        color: #e2e8f0 !important;
+        background: rgba(255, 255, 255, 0.09) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        border-radius: 50% !important;
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+        cursor: pointer !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        flex-shrink: 0 !important;
+        touch-action: manipulation !important;
+      }
+
+      .profile-close-btn:active {
+        transform: scale(0.92) !important;
+        background: rgba(255, 255, 255, 0.22) !important;
+        border-color: rgba(255, 255, 255, 0.35) !important;
+        color: #ffffff !important;
       }
 
       /* Dedicated Full Page View for Analytics Sub-Pages on Mobile */
@@ -7330,6 +7773,160 @@
         flex-shrink: 0 !important;
       }
 
+      /* 🏆 Best Selling Foods & Sales Analytics Modal (Mobile Alignment & Back Button Removal) */
+      #bestSalesAnalyticsModal .modal-card-bottom {
+        padding: 10px 14px max(12px, env(safe-area-inset-bottom, 0px)) !important;
+      }
+
+      #bestSalesAnalyticsModal .modal-card-bottom .btn-reg-secondary {
+        display: none !important;
+      }
+
+      #bestSalesAnalyticsModal .modal-card-bottom .btn-primary-action {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        height: 42px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 0.86rem !important;
+        font-weight: 800 !important;
+        border-radius: 10px !important;
+      }
+
+      .best-sales-filter-bar {
+        padding: 8px 12px !important;
+        gap: 6px !important;
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+      }
+
+      .best-filter-btn {
+        font-size: 0.72rem !important;
+        padding: 5px 8px !important;
+        border-radius: 6px !important;
+        white-space: nowrap !important;
+      }
+
+      .best-sales-count-badge {
+        font-size: 0.68rem !important;
+        padding: 3px 8px !important;
+        border-radius: 6px !important;
+        white-space: nowrap !important;
+      }
+
+      .best-sales-kpi-ribbon {
+        padding: 8px 12px !important;
+        gap: 8px !important;
+      }
+
+      .best-kpi-box {
+        padding: 7px 9px !important;
+        border-radius: 8px !important;
+      }
+
+      .best-kpi-label {
+        font-size: 0.62rem !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+
+      .best-kpi-val {
+        font-size: 1.02rem !important;
+        font-weight: 800 !important;
+        white-space: nowrap !important;
+      }
+
+      .food-rank-card {
+        padding: 10px 12px !important;
+        gap: 8px !important;
+        border-radius: 12px !important;
+      }
+
+      .food-rank-top {
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+      }
+
+      .food-rank-left {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 5px !important;
+        min-width: 0 !important;
+        flex: 1 !important;
+      }
+
+      .food-rank-medal {
+        font-size: 0.70rem !important;
+        font-weight: 800 !important;
+        padding: 2px 7px !important;
+        border-radius: 6px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        line-height: 1.3 !important;
+      }
+
+      .food-rank-info {
+        width: 100% !important;
+        min-width: 0 !important;
+      }
+
+      .food-rank-name {
+        font-size: 0.92rem !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        line-height: 1.3 !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+      }
+
+      .food-rank-cat {
+        font-size: 0.70rem !important;
+        color: #64748b !important;
+        font-weight: 600 !important;
+        margin-top: 1px !important;
+      }
+
+      .food-rank-right {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        gap: 3px !important;
+        flex-shrink: 0 !important;
+        text-align: right !important;
+      }
+
+      .food-rank-qty-tag {
+        font-size: 0.74rem !important;
+        font-weight: 800 !important;
+        padding: 2px 7px !important;
+        border-radius: 6px !important;
+        white-space: nowrap !important;
+      }
+
+      .food-rank-rev-tag {
+        font-size: 0.95rem !important;
+        font-weight: 900 !important;
+        color: #0f172a !important;
+        white-space: nowrap !important;
+      }
+
+      .food-rank-meta-row {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        font-size: 0.70rem !important;
+        color: #64748b !important;
+        gap: 4px !important;
+        flex-wrap: wrap !important;
+      }
+
       .profile-modal-header {
         padding: max(12px, env(safe-area-inset-top)) 12px 10px !important;
         position: -webkit-sticky !important;
@@ -7385,16 +7982,7 @@
       }
 
       .prof-time-date-card {
-        padding: 6px 10px !important;
-      }
-
-      .prof-time-digits {
-        font-size: 1.08rem !important;
-      }
-
-      .prof-date-badge {
-        font-size: 0.68rem !important;
-        padding: 2px 6px !important;
+        display: none !important;
       }
 
       .profile-modal-body {
@@ -7493,38 +8081,31 @@
 
       .profile-modal-footer {
         padding: 8px 10px max(10px, env(safe-area-inset-bottom)) !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
       }
 
-      .btn-profile-logout-sm,
-      .btn-profile-close {
-        height: 32px !important;
-        font-size: 0.72rem !important;
-        padding: 0 10px !important;
+      .profile-modal-footer .btn-profile-close {
+        display: none !important;
+      }
+
+      .btn-profile-logout-sm {
+        height: 34px !important;
+        font-size: 0.74rem !important;
+        padding: 0 12px !important;
+        width: 100% !important;
+        max-width: 240px !important;
+        justify-content: center !important;
       }
 
       .product-touch-grid {
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 6px !important;
+        gap: 8px !important;
         max-height: none !important;
         overflow: visible !important;
         touch-action: pan-y !important;
-        padding-bottom: 20px !important;
-      }
-
-      .product-touch-card {
-        min-height: 114px;
-        padding: 8px 6px;
-        touch-action: pan-y !important;
-      }
-
-      .product-name-title {
-        font-size: 0.72rem;
-        min-height: 2.4em;
-      }
-
-      .product-price-pill {
-        font-size: 0.8rem;
-        padding: 2px 6px;
+        padding-bottom: 8px !important;
       }
 
       .register-secondary-row {
@@ -11666,13 +12247,227 @@
       border: 1px solid #fecdd3;
     }
 
+    /* =========================================================================
+       Modal: Staff & Store Quick Actions Modal Header (.shift-modal-header)
+       ========================================================================= */
+    .shift-modal-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%);
+      color: #ffffff;
+      padding: 18px 24px;
+      border-bottom: 2px solid rgba(16, 185, 129, 0.4);
+      position: relative;
+    }
+
+    .shift-modal-header-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .shift-modal-header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .shift-modal-icon-badge {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.15) 100%);
+      border: 1.5px solid rgba(52, 211, 153, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
+      flex-shrink: 0;
+    }
+
+    .shift-modal-text-group {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .shift-modal-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .shift-modal-title {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+      line-height: 1.25;
+    }
+
+    .shift-modal-portal-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .shift-modal-subtitle {
+      margin: 3px 0 0;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .shift-modal-close-btn {
+      color: #cbd5e1;
+      font-size: 1.2rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .shift-modal-close-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
     /* Dedicated Mobile Phone View Overrides (< 768px) */
     @media (max-width: 768px) {
-      #shiftActionModal .modal-window-card {
-        width: 92% !important;
-        max-width: 440px !important;
-        max-height: 92vh !important;
-        border-radius: 20px !important;
+      #shiftActionModal.modal-backdrop,
+      #storeDocumentsModal.modal-backdrop,
+      #storeDocPreviewModal.modal-backdrop,
+      #storeDocEditModal.modal-backdrop {
+        z-index: 10080 !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
+        padding: 0 !important;
+        background: rgba(15, 23, 42, 0.65) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+      }
+
+      #shiftActionModal .modal-window-card,
+      #storeDocumentsModal .modal-window-card,
+      #storeDocPreviewModal .modal-window-card,
+      #storeDocEditModal .modal-window-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 88vh !important;
+        border-radius: 28px 28px 0 0 !important;
+        border: none !important;
+        margin: 0 !important;
+        overflow-y: auto !important;
+        box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.45) !important;
+        animation: mobileSheetSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+
+      /* Quick Actions Header: Precise, Professional Alignment on Mobile */
+      .shift-modal-header {
+        padding: 12px 14px 14px !important;
+      }
+
+      .mobile-sheet-drag-handle {
+        display: block !important;
+        margin: 0 auto 10px auto !important;
+        width: 36px !important;
+        height: 4px !important;
+      }
+
+      .shift-modal-header-main {
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        width: 100% !important;
+      }
+
+      .shift-modal-header-left {
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+      }
+
+      .shift-modal-icon-badge {
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 11px !important;
+        font-size: 1.15rem !important;
+        flex-shrink: 0 !important;
+        margin-top: 2px !important;
+      }
+
+      .shift-modal-text-group {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+      }
+
+      .shift-modal-title-row {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-wrap: wrap !important;
+      }
+
+      .shift-modal-title {
+        font-size: 0.96rem !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.2px !important;
+        line-height: 1.25 !important;
+        color: #ffffff !important;
+        margin: 0 !important;
+      }
+
+      /* Remove redundant portal badge on mobile so only 1 clean close button remains */
+      .shift-modal-portal-badge {
+        display: none !important;
+      }
+
+      .shift-modal-subtitle {
+        margin: 3px 0 0 0 !important;
+        font-size: 0.74rem !important;
+        font-weight: 500 !important;
+        color: #94a3b8 !important;
+        line-height: 1.35 !important;
+      }
+
+      .shift-modal-close-btn {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 1.05rem !important;
+        border-radius: 9px !important;
+        margin-top: 2px !important;
+        flex-shrink: 0 !important;
+      }
+
+      /* Hide duplicate bottom footer close button on mobile */
+      #shiftActionModal .shift-modal-footer,
+      #shiftActionModal .shift-modal-footer-close-btn {
+        display: none !important;
       }
 
       .shift-action-cards-grid {
@@ -11714,6 +12509,93 @@
         margin-left: auto !important;
         padding: 4px 10px !important;
         font-size: 0.65rem !important;
+      }
+
+      /* =========================================================================
+         📱 Mobile Responsive Layout for Operation Steps (STEP 01 to STEP 04)
+         Properly stacks badge, title, subtitle & button with 100% readable width
+         ========================================================================= */
+      .step-action-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+        padding: 12px 14px !important;
+        border-radius: 14px !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        background: #ffffff !important;
+        border: 1.5px solid #e2e8f0 !important;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+      }
+
+      .step-action-row:active {
+        background: #f8fafc !important;
+        transform: scale(0.99) !important;
+      }
+
+      .step-action-row > div:first-child {
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      .step-action-row > div:first-child > span:first-child {
+        flex-shrink: 0 !important;
+        margin-top: 2px !important;
+        font-size: 0.68rem !important;
+        padding: 3px 7px !important;
+        border-radius: 6px !important;
+      }
+
+      .step-action-row > div:first-child > span:nth-child(2) {
+        flex-shrink: 0 !important;
+        font-size: 1.25rem !important;
+        line-height: 1 !important;
+        margin-top: 1px !important;
+      }
+
+      .step-action-row > div:first-child > div:last-child {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+      }
+
+      .step-action-row > div:first-child > div:last-child > div:first-child {
+        font-size: 0.90rem !important;
+        font-weight: 800 !important;
+        line-height: 1.3 !important;
+        white-space: normal !important;
+        word-break: normal !important;
+      }
+
+      .step-action-row > div:first-child > div:last-child > div:last-child {
+        font-size: 0.74rem !important;
+        line-height: 1.35 !important;
+        margin-top: 3px !important;
+        white-space: normal !important;
+        word-break: normal !important;
+        color: #64748b !important;
+      }
+
+      .step-action-row > button {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 9px 14px !important;
+        font-size: 0.80rem !important;
+        font-weight: 800 !important;
+        border-radius: 10px !important;
+        box-sizing: border-box !important;
+        margin-top: 2px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+      }
+
+      #shiftActionModal .modal-window-card > div:nth-child(2),
+      #posQuickActionsModal .modal-window-card > div:nth-child(2) {
+        padding: 16px 14px !important;
+        gap: 10px !important;
       }
     }
 
@@ -11832,6 +12714,16 @@
     }
 
     @media (max-width: 768px) {
+      /* 🚫 Remove Registered Accounts & Email Directory from mobile phones */
+      .prof-registered-users-card,
+      #registeredUsersListContainer,
+      #registeredUsersCountBadge,
+      #resignReloginModal,
+      .resign-relogin-modal-card,
+      .step-registered-accounts-row {
+        display: none !important;
+      }
+
       .resign-relogin-modal-card {
         width: 95% !important;
         max-width: 440px !important;
@@ -12372,14 +13264,20 @@
           </div>
         </div>
 
-        <!-- Mobile Top-Corner Cashier Profile Button (Icon-Only Executive Button) -->
-        <button type="button" class="mobile-corner-profile-btn" id="mobileCornerProfileBtn"
-          onclick="openUserProfileModal()" title="Store Cashier Profile & Sales Cockpit" aria-label="Store Profile">
-          <div class="mobile-corner-avatar-ring">
-            <span class="mobile-corner-emoji">👤</span>
-            <span class="mobile-corner-beacon" title="Live Counter Shift Active"></span>
-          </div>
-        </button>
+        <!-- Mobile Top-Corner Actions (Bell Sound Toggle & Cashier Profile Button) -->
+        <div class="mobile-corner-actions">
+          <button type="button" class="mobile-header-sound-btn" id="mobileHeaderSoundBtn"
+            onclick="toggleAudioSound()" title="Sound: ON (Tap to mute)" aria-label="Toggle Sound">
+            <span class="mobile-sound-icon">🔔</span>
+          </button>
+          <button type="button" class="mobile-corner-profile-btn" id="mobileCornerProfileBtn"
+            onclick="openUserProfileModal()" title="Store Cashier Profile & Sales Cockpit" aria-label="Store Profile">
+            <div class="mobile-corner-avatar-ring">
+              <span class="mobile-corner-emoji">👤</span>
+              <span class="mobile-corner-beacon" title="Live Counter Shift Active"></span>
+            </div>
+          </button>
+        </div>
       </div>
 
       <div class="header-controls">
@@ -13495,26 +14393,18 @@
       <!-- Top Header Bar with Live Clock & Sound Toggle -->
       <div class="profile-modal-header">
         <div class="profile-modal-top-row">
-          <button type="button" class="btn-profile-nav-back" id="btnProfileNavBack" onclick="closeUserProfileModal()"
-            title="Back to Store Menu">
-            <span class="nav-back-arrow">←</span> <span class="nav-back-text">Store</span>
+          <!-- Left: Owner Executive Button (Mobile Only) -->
+          <button type="button" class="prof-shift-action-btn" onclick="openShiftActionModal()"
+            title="Owner Portal & Store Quick Actions" aria-label="Owner">
+            <span class="prof-owner-beacon"></span>
+            <span class="prof-owner-btn-text">Owner</span>
+            <span class="prof-owner-btn-icon">⚡</span>
           </button>
-          <div class="profile-user-summary">
-            <span class="profile-avatar-emoji">👤</span>
-            <div class="profile-user-texts">
-              <span class="profile-user-title" id="profileModalFullName">Store Manager</span>
-              <span class="profile-user-email" id="profileModalEmail"
-                style="font-size: 12px; color: #475569; font-weight: 500;">admin@sugarcubes.com</span>
-              <span class="profile-user-shift"><span class="prof-beacon-dot"></span> Live Shift • Counter #1</span>
-            </div>
-          </div>
+
+          <!-- Right: Dismiss / Back to Store Symbol Button -->
           <div class="profile-header-actions">
-            <button type="button" class="prof-sound-toggle-btn" id="profSoundToggleBtn" onclick="toggleAudioSound()"
-              title="Toggle POS sound effects">
-              🔔 Sound: ON
-            </button>
             <button type="button" class="modal-close-x profile-close-btn" onclick="closeUserProfileModal()"
-              title="Back to Store Menu">✕</button>
+              title="Back to Store Menu" aria-label="Back to Store">✕</button>
           </div>
         </div>
 
@@ -13668,35 +14558,22 @@
       onclick="event.stopPropagation()">
 
       <!-- Modal Header -->
-      <div
-        style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%); color: #ffffff; padding: 18px 24px; border-bottom: 2px solid rgba(16, 185, 129, 0.4); position: relative;">
-        <div class="mobile-sheet-drag-handle"
-          style="width: 42px; height: 5px; background: rgba(255, 255, 255, 0.35); border-radius: 4px; margin: 0 auto 14px auto; display: none;">
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="display: flex; align-items: center; gap: 14px;">
-            <div
-              style="width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.15) 100%); border: 1.5px solid rgba(52, 211, 153, 0.4); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);">
-              ⚡
-            </div>
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: #ffffff; letter-spacing: -0.3px;">
-                  Staff & Store Quick Actions
-                </h3>
-                <span
-                  style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; letter-spacing: 0.3px; text-transform: uppercase;">Portal</span>
+      <div class="shift-modal-header">
+        <div class="mobile-sheet-drag-handle"></div>
+        <div class="shift-modal-header-main">
+          <div class="shift-modal-header-left">
+            <div class="shift-modal-icon-badge">⚡</div>
+            <div class="shift-modal-text-group">
+              <div class="shift-modal-title-row">
+                <h3 class="shift-modal-title">Staff & Store Quick Actions</h3>
+                <span class="shift-modal-portal-badge">Portal</span>
               </div>
-              <p style="margin: 3px 0 0; font-size: 0.78rem; color: #94a3b8; font-weight: 600;">
-                Cashier Utilities & Management Directory
-              </p>
+              <p class="shift-modal-subtitle">Cashier Utilities & Management Directory</p>
             </div>
           </div>
-          <button type="button" class="modal-close-x"
-            style="color: #cbd5e1; font-size: 1.2rem; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); width: 34px; height: 34px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;"
+          <button type="button" class="modal-close-x shift-modal-close-btn"
             onclick="closeShiftActionModal()"
-            onmouseover="this.style.color='#fff'; this.style.background='rgba(255,255,255,0.2)'"
-            onmouseout="this.style.color='#cbd5e1'; this.style.background='rgba(255,255,255,0.08)'">✕</button>
+            title="Close Quick Actions">✕</button>
         </div>
       </div>
 
@@ -13743,40 +14620,25 @@
             </button>
           </div>
 
-          <!-- Step 3: Staff Roster -->
-          <div class="step-action-row" onclick="openResignReloginModal();" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+          <!-- Step 3: Store Franchise & Building Documents -->
+          <div class="step-action-row" onclick="openStoreDocumentsModal();" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="background: #fdf2f8; color: #db2777; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #fbcfe8; white-space: nowrap;">STEP 03</span>
-              <span style="font-size: 1.2rem;">👥</span>
+              <span style="background: #e0e7ff; color: #4338ca; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #c7d2fe; white-space: nowrap;">STEP 03</span>
+              <span style="font-size: 1.2rem;">📁</span>
               <div>
-                <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Registered Accounts Directory</div>
-                <div style="font-size: 0.74rem; color: #64748b; margin-top: 1px;">Switch active cashier account, re-authenticate or resign</div>
+                <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Store Franchise & Building Documents</div>
+                <div style="font-size: 0.74rem; color: #64748b; margin-top: 1px;">Upload & access franchise agreements, building lease & licenses</div>
               </div>
             </div>
-            <button type="button" style="background: #fdf2f8; color: #be185d; border: 1px solid #fbcfe8; padding: 6px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
-              Manage Directory <span>→</span>
+            <button type="button" style="background: #e0e7ff; color: #3730a3; border: 1px solid #c7d2fe; padding: 6px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+              Upload Documents <span>→</span>
             </button>
           </div>
 
-          <!-- Step 4: Lock Terminal -->
-          <div class="step-action-row" onclick="closeShiftActionModal(); logoutUser();" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="background: #fff1f2; color: #e11d48; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #fecdd3; white-space: nowrap;">STEP 04</span>
-              <span style="font-size: 1.2rem;">🔒</span>
-              <div>
-                <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Lock Register Terminal</div>
-                <div style="font-size: 0.74rem; color: #64748b; margin-top: 1px;">Safely sign out active cashier and lock POS register terminal</div>
-              </div>
-            </div>
-            <button type="button" style="background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; padding: 6px 12px; border-radius: 20px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
-              Lock Register <span>→</span>
-            </button>
-          </div>
-
-          <!-- Step 5: Full System Reset -->
+          <!-- Step 4: Full System Reset -->
           <div class="step-action-row" onclick="closeShiftActionModal(); clearAllSalesAndLogoutSystem();" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="background: #fffbe3; color: #b45309; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #fde68a; white-space: nowrap;">STEP 05</span>
+              <span style="background: #fffbe3; color: #b45309; font-weight: 800; font-size: 0.72rem; padding: 4px 8px; border-radius: 6px; border: 1px solid #fde68a; white-space: nowrap;">STEP 04</span>
               <span style="font-size: 1.2rem;">🔄</span>
               <div>
                 <div style="font-weight: 800; font-size: 0.88rem; color: #9f1239;">Reset All Records & Restart</div>
@@ -13793,7 +14655,7 @@
       </div>
 
       <!-- Modal Footer -->
-      <div
+      <div class="shift-modal-footer"
         style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
         <div
           style="display: flex; align-items: center; gap: 8px; font-size: 0.78rem; font-weight: 700; color: #64748b;">
@@ -13801,7 +14663,7 @@
             style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #10b981;"></span>
           Store Management Portal
         </div>
-        <button type="button" onclick="closeShiftActionModal()"
+        <button type="button" class="shift-modal-footer-close-btn" onclick="closeShiftActionModal()"
           style="background: #ffffff; color: #334155; border: 1.5px solid #cbd5e1; padding: 9px 22px; border-radius: 10px; font-weight: 800; font-size: 0.82rem; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.03);"
           onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#94a3b8';"
           onmouseout="this.style.background='#ffffff'; this.style.borderColor='#cbd5e1';">
@@ -13848,7 +14710,7 @@
         style="padding: 18px; overflow-y: auto; flex: 1; background: #ffffff; display: flex; flex-direction: column; gap: 14px;">
 
         <!-- 👥 Registered Accounts & Email Directory Card -->
-        <div
+        <div class="prof-registered-users-card"
           style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
           <div
             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #f1f5f9;">
@@ -13875,6 +14737,208 @@
         <button type="button" onclick="closeResignReloginModal()"
           style="background: #ffffff; color: #334155; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
           ✕ Close Window
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Modal: Store Franchise & Building Documents Vault Modal
+       ========================================================================= -->
+  <div id="storeDocumentsModal" class="modal-backdrop" style="display: none; z-index: 10070;" onclick="closeStoreDocumentsModalOnBackdrop(event)">
+    <div class="modal-window-card store-docs-modal-card" style="max-width: 580px; width: 94%; max-height: 88vh; display: flex; flex-direction: column; border-radius: 18px; overflow: hidden; box-shadow: 0 24px 54px rgba(15, 23, 42, 0.4);" onclick="event.stopPropagation()">
+
+      <!-- Modal Header: Professional Clean Layout (Mobile Optimized) -->
+      <div style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #312e81 100%); color: #ffffff; padding: 14px 16px; border-bottom: 2px solid rgba(129, 140, 248, 0.35); display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+          <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+            📁
+          </div>
+          <div style="min-width: 0; flex: 1;">
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <h3 style="margin: 0; font-size: 0.96rem; font-weight: 800; color: #ffffff; letter-spacing: -0.2px; line-height: 1.25;">
+                Franchise & Building Documents
+              </h3>
+              <span style="background: rgba(99, 102, 241, 0.25); border: 1px solid rgba(165, 180, 252, 0.4); color: #c7d2fe; font-size: 0.62rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; text-transform: uppercase; white-space: nowrap;">
+                Verified Vault
+              </span>
+            </div>
+            <p style="margin: 2px 0 0; font-size: 0.72rem; color: #94a3b8; line-height: 1.3;">
+              Official Franchise Agreements, Building Lease, NOC & Licenses
+            </p>
+          </div>
+        </div>
+        <button type="button" class="modal-close-x" style="color: #ffffff; font-size: 1.1rem; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); width: 32px; height: 32px; min-width: 32px; min-height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;" onclick="closeStoreDocumentsModal()" title="Close Documents">✕</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div style="padding: 14px 16px; overflow-y: auto; flex: 1; background: #f8fafc; display: flex; flex-direction: column; gap: 14px;">
+
+        <!-- 📤 Upload Document Card -->
+        <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 14px; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 7px;">
+              <span style="font-size: 1.05rem;">📤</span>
+              <span style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Upload Store Document</span>
+            </div>
+            <span style="font-size: 0.66rem; font-weight: 700; color: #4338ca; background: #e0e7ff; padding: 2px 8px; border-radius: 10px;">PDF, PNG, JPG</span>
+          </div>
+
+          <!-- Document Category Selector -->
+          <div style="margin-bottom: 8px;">
+            <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #475569; margin-bottom: 3px;">Document Category</label>
+            <select id="storeDocCategorySelect" style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 0.80rem; font-weight: 600; color: #1e293b; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none;">
+              <option value="Franchise Agreement">🏢 Store Franchise Agreement</option>
+              <option value="Building Lease">🏛️ Commercial Building Rental / Lease Deed</option>
+              <option value="FSSAI License">🥗 FSSAI Food Safety License</option>
+              <option value="GST Certificate">📄 GSTIN Tax Certificate</option>
+              <option value="Fire Safety NOC">🚒 Fire & Municipal Clearance NOC</option>
+              <option value="Store Insurance">🛡️ Property & Store Insurance Policy</option>
+              <option value="Other Document">📁 Other Store Legal Document</option>
+            </select>
+          </div>
+
+          <!-- Document Title / Description -->
+          <div style="margin-bottom: 10px;">
+            <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #475569; margin-bottom: 3px;">Document Label / Reference (Optional)</label>
+            <input type="text" id="storeDocTitleInput" placeholder="e.g. Sugar Cubes Franchise 2026-2031, Lease Unit #4" style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 0.80rem; color: #1e293b; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none;">
+          </div>
+
+          <!-- Hidden File Input -->
+          <input type="file" id="storeDocFileInput" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" style="display: none;" onchange="handleStoreDocFileSelected(event)">
+
+          <!-- Upload Trigger Button Area -->
+          <div onclick="document.getElementById('storeDocFileInput').click()" style="border: 2px dashed #818cf8; background: #eef2ff; border-radius: 10px; padding: 14px 12px; text-align: center; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.background='#e0e7ff'" onmouseout="this.style.background='#eef2ff'">
+            <div style="font-size: 1.6rem; margin-bottom: 2px;">📄</div>
+            <div style="font-weight: 800; font-size: 0.84rem; color: #3730a3;">Tap to Select & Upload Document</div>
+            <div style="font-size: 0.70rem; color: #6366f1; margin-top: 2px;">PDF, Images or Documents (Auto-saved)</div>
+          </div>
+        </div>
+
+        <!-- 📑 Stored Documents Repository Section -->
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 7px;">
+              <span style="font-size: 1.05rem;">📑</span>
+              <span style="font-weight: 800; font-size: 0.88rem; color: #0f172a;">Active Store Documents Repository</span>
+            </div>
+            <span id="storeDocsCountBadge" style="font-size: 0.68rem; font-weight: 700; color: #1e293b; background: #e2e8f0; padding: 2px 8px; border-radius: 12px;">5 Documents</span>
+          </div>
+
+          <!-- List Container -->
+          <div id="storeDocsListContainer" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Rendered dynamically by renderStoreDocumentsList() -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div style="padding: 10px 16px max(12px, env(safe-area-inset-bottom, 0px)); background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.74rem; color: #475569; font-weight: 700;">
+          <span style="width: 7px; height: 7px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 6px #10b981;"></span>
+          <span>Store Vault Active</span>
+        </div>
+        <button type="button" onclick="closeStoreDocumentsModal()" style="background: #ffffff; color: #334155; border: 1.5px solid #cbd5e1; padding: 7px 16px; border-radius: 8px; font-weight: 800; font-size: 0.80rem; cursor: pointer; transition: all 0.2s ease;">
+          ✕ Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Modal: Document Live In-App Preview Modal (Opens on "View" Click)
+       ========================================================================= -->
+  <div id="storeDocPreviewModal" class="modal-backdrop" style="display: none; z-index: 10080;" onclick="closeStoreDocPreviewModalOnBackdrop(event)">
+    <div class="modal-window-card" style="max-width: 620px; width: 95%; max-height: 90vh; display: flex; flex-direction: column; border-radius: 18px; overflow: hidden; box-shadow: 0 24px 60px rgba(15, 23, 42, 0.5); background: #ffffff;" onclick="event.stopPropagation()">
+
+      <!-- Preview Header -->
+      <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #334155; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+          <span id="previewDocIcon" style="font-size: 1.3rem;">📄</span>
+          <div style="min-width: 0; flex: 1;">
+            <h4 id="previewDocTitle" style="margin: 0; font-size: 0.92rem; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              Document Preview
+            </h4>
+            <span id="previewDocCategoryBadge" style="font-size: 0.64rem; font-weight: 700; color: #93c5fd; background: rgba(59, 130, 246, 0.2); padding: 1px 6px; border-radius: 4px; display: inline-block; margin-top: 2px;">
+              Category
+            </span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+          <button type="button" id="previewDownloadBtn" style="background: #10b981; color: #ffffff; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 800; font-size: 0.74rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <span>⬇️</span> <span>Download</span>
+          </button>
+          <button type="button" class="modal-close-x" onclick="closeStoreDocPreviewModal()" style="color: #ffffff; font-size: 1.1rem; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">✕</button>
+        </div>
+      </div>
+
+      <!-- Preview Content Area -->
+      <div id="previewDocContentArea" style="flex: 1; overflow-y: auto; padding: 16px; background: #f8fafc; min-height: 280px; display: flex; align-items: center; justify-content: center;">
+        <!-- Injected by previewStoreDocument(id) -->
+      </div>
+
+      <!-- Preview Footer -->
+      <div style="padding: 10px 16px; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+        <span id="previewDocFooterInfo" style="font-size: 0.72rem; color: #64748b; font-weight: 600;">
+          Verified Official Store Document
+        </span>
+        <button type="button" onclick="closeStoreDocPreviewModal()" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 8px; font-weight: 800; font-size: 0.76rem; cursor: pointer;">
+          Done
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Modal: Edit Store Document Metadata Modal (Opens on "Edit" Click)
+       ========================================================================= -->
+  <div id="storeDocEditModal" class="modal-backdrop" style="display: none; z-index: 10080;" onclick="closeStoreDocEditModalOnBackdrop(event)">
+    <div class="modal-window-card" style="max-width: 440px; width: 92%; display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 48px rgba(15, 23, 42, 0.4); background: #ffffff;" onclick="event.stopPropagation()">
+
+      <!-- Edit Header -->
+      <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #ffffff; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.2rem;">✏️</span>
+          <h4 style="margin: 0; font-size: 0.94rem; font-weight: 800; color: #ffffff;">Edit Document Details</h4>
+        </div>
+        <button type="button" class="modal-close-x" onclick="closeStoreDocEditModal()" style="color: #ffffff; font-size: 1.1rem; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">✕</button>
+      </div>
+
+      <!-- Edit Form Body -->
+      <div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; background: #ffffff;">
+        <input type="hidden" id="editDocIdHidden">
+
+        <div>
+          <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #475569; margin-bottom: 4px;">Document Title / Label</label>
+          <input type="text" id="editDocTitleInput" style="width: 100%; box-sizing: border-box; padding: 8px 12px; font-size: 0.84rem; color: #0f172a; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none;">
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #475569; margin-bottom: 4px;">Document Category</label>
+          <select id="editDocCategorySelect" style="width: 100%; box-sizing: border-box; padding: 8px 12px; font-size: 0.84rem; color: #0f172a; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none; background: #ffffff;">
+            <option value="Franchise Agreement">🏢 Store Franchise Agreement</option>
+            <option value="Building Lease">🏛️ Commercial Building Rental / Lease Deed</option>
+            <option value="FSSAI License">🥗 FSSAI Food Safety License</option>
+            <option value="GST Certificate">📄 GSTIN Tax Certificate</option>
+            <option value="Fire Safety NOC">🚒 Fire & Municipal Clearance NOC</option>
+            <option value="Store Insurance">🛡️ Property & Store Insurance Policy</option>
+            <option value="Other Document">📁 Other Store Legal Document</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Edit Footer -->
+      <div style="padding: 12px 18px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 8px; flex-shrink: 0;">
+        <button type="button" onclick="closeStoreDocEditModal()" style="background: #ffffff; color: #475569; border: 1px solid #cbd5e1; padding: 7px 14px; border-radius: 8px; font-weight: 700; font-size: 0.78rem; cursor: pointer;">
+          Cancel
+        </button>
+        <button type="button" onclick="saveEditedStoreDocument()" style="background: #2563eb; color: #ffffff; border: none; padding: 7px 16px; border-radius: 8px; font-weight: 800; font-size: 0.78rem; cursor: pointer;">
+          Save Changes
         </button>
       </div>
 
@@ -16148,6 +17212,13 @@
         if (profBtn) {
           profBtn.innerHTML = soundEnabled ? '🔔 Sound: ON' : '🔕 Sound: OFF';
         }
+        const mobSoundBtn = document.getElementById('mobileHeaderSoundBtn');
+        if (mobSoundBtn) {
+          const iconSpan = mobSoundBtn.querySelector('.mobile-sound-icon') || mobSoundBtn;
+          iconSpan.textContent = soundEnabled ? '🔔' : '🔕';
+          mobSoundBtn.setAttribute('title', soundEnabled ? 'Sound: ON (Tap to mute)' : 'Sound: OFF (Tap to unmute)');
+          mobSoundBtn.classList.toggle('sound-muted', !soundEnabled);
+        }
         showToast(soundEnabled ? '🔔 Register sound enabled' : '🔕 Register sound muted');
       }
 
@@ -16373,7 +17444,7 @@
             <span class="product-price-figure">${item.price.toFixed(2)}</span>
           </div>
           <button type="button" class="btn-card-quick-add ${isOutOfStock ? 'disabled' : ''}" onclick="if (!${isOutOfStock}) { directAddCatalogItem('${safeProdId}'); } event.stopPropagation();" title="Add to cart">
-            <span>+ Add</span>
+            <span>+ Add to Cart</span>
           </button>
         </div>
       </div>
@@ -16446,7 +17517,6 @@
 
         playBeep('add');
         renderCart();
-        showToast(`✨ Added <strong>${escapeHtml(product.name)}</strong> to Order!`);
       }
 
       function stepCartItem(index, delta) {
@@ -17622,8 +18692,10 @@
         if (mobileStickyBar) {
           if (activeCart.length > 0 && currentMobileTab === 'menu' && window.innerWidth <= 768) {
             mobileStickyBar.style.display = 'flex';
+            document.body.classList.add('has-cart-bar');
           } else {
             mobileStickyBar.style.display = 'none';
+            document.body.classList.remove('has-cart-bar');
           }
         }
       }
@@ -18475,7 +19547,7 @@
       let isPoppingFromScript = false;
 
       function isMobileViewport() {
-        return window.innerWidth <= 768;
+        return window.innerWidth <= 768 || (window.innerHeight <= 520 && window.innerWidth <= 960);
       }
 
       function updateMobileScrollLock() {
@@ -19496,6 +20568,11 @@
       let currentDesktopPage = 'store'; // 'store' or 'sales'
 
       function switchDesktopPage(page) {
+        if (isMobileViewport()) {
+          switchMobileView(currentMobileTab || 'menu');
+          return;
+        }
+
         currentDesktopPage = page;
         try {
           sessionStorage.setItem('sugarCubesCurrentDesktopPage', page);
@@ -19755,9 +20832,8 @@
           if (isMobile) {
             bottomEl.innerHTML = `
         <div class="hist-mobile-cmd-dock">
-          ${showBack ? `<button type="button" class="btn-hist-dock btn-dock-back" onclick="closeOrderHistoryModal();">${backLabel}</button>` : `<button type="button" class="btn-hist-dock btn-dock-close" onclick="closeOrderHistoryModal();">✕ Close</button>`}
           <button type="button" class="btn-hist-dock btn-dock-export" onclick="exportToExcel()" title="Export all sales to CSV">📈 Export CSV</button>
-          <button type="button" class="btn-hist-dock btn-dock-audit" onclick="openDailyReportModal('all', ${showBack})">📊 Sales Audit</button>
+          <button type="button" class="btn-hist-dock btn-dock-audit" onclick="openDailyReportModal('all', false)">📊 Sales Audit</button>
         </div>
       `;
           } else {
@@ -20462,12 +21538,18 @@
             backLabel = '← Back to Store';
           }
 
-          const showBack = fromProfile || isMobile || (mobileModalStack.length > 0);
-          bottomEl.innerHTML = `
-      ${showBack ? `<button type="button" class="btn-reg-secondary" style="padding: 8px 14px; font-size: 0.84rem;" onclick="closeDailyReportModal();">${backLabel}</button>` : ''}
-      <button type="button" class="btn-dismiss" onclick="closeDailyReportModal()">Close</button>
-      <button type="button" class="btn-primary-action" onclick="printDailyReport()">🖨️ Print Statement</button>
-    `;
+          if (isMobile) {
+            bottomEl.innerHTML = `
+              <button type="button" class="btn-primary-action" onclick="printDailyReport()">🖨️ Print Statement</button>
+            `;
+          } else {
+            const showBack = fromProfile || (mobileModalStack.length > 0);
+            bottomEl.innerHTML = `
+              ${showBack ? `<button type="button" class="btn-reg-secondary" style="padding: 8px 14px; font-size: 0.84rem;" onclick="closeDailyReportModal();">${backLabel}</button>` : ''}
+              <button type="button" class="btn-dismiss" onclick="closeDailyReportModal()">Close</button>
+              <button type="button" class="btn-primary-action" onclick="printDailyReport()">🖨️ Print Statement</button>
+            `;
+          }
         }
 
         const modal = document.getElementById('dailyReportModal');
@@ -20850,42 +21932,8 @@
       // ==========================================================================
 
       function showToast(msgHtml) {
-        let container = document.getElementById('posToastContainer');
-        if (!container) {
-          container = document.createElement('div');
-          container.id = 'posToastContainer';
-          document.body.appendChild(container);
-        }
-
-        // Avoid identical duplicate toasts stacking simultaneously
-        const existing = container.querySelectorAll('.pos-toast');
-        for (let el of existing) {
-          if (el.innerHTML === msgHtml) return;
-        }
-
-        const toast = document.createElement('div');
-        toast.className = 'pos-toast';
-        toast.innerHTML = msgHtml;
-        container.appendChild(toast);
-
-        let dismissTimeout = null;
-        const triggerDismiss = () => {
-          dismissTimeout = setTimeout(() => {
-            toast.style.transition = 'all 0.3s ease-out';
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateY(10px)';
-            setTimeout(() => { toast.remove(); }, 300);
-          }, 3200);
-        };
-
-        toast.addEventListener('mouseenter', () => {
-          if (dismissTimeout) clearTimeout(dismissTimeout);
-        });
-        toast.addEventListener('mouseleave', () => {
-          triggerDismiss();
-        });
-
-        triggerDismiss();
+        // Silent background operation: all toast popups hidden per user request
+        return;
       }
 
       function escapeHtml(text) {
@@ -22033,9 +23081,6 @@
           localStorage.setItem('sugar_cubes_store', JSON.stringify(authenticatedStore));
           applyAuthenticatedState(authenticatedStore, true);
           checkAuthSession();
-          if (typeof showToast === 'function') {
-            showToast(`Welcome! Logged into ${authenticatedStore.name}`, 'success');
-          }
         }
       }
 
@@ -22184,9 +23229,8 @@
             if (notesInput) notesInput.value = '';
 
             localStorage.setItem(`sugarCubes_user_has_logged_before_${userKey}`, 'true');
-            showToast(`✨ Welcome ${escapeHtml(user.name || 'Cashier')}! Workspace loaded with fresh clean register.`);
           } else {
-            // 🔄 EXISTING USER LOGIN: Load and restore previous store records & active cart
+            // 🔄 EXISTING USER LOGIN: Load and restore previous store records & active cart silently in background
             const savedCartJson = localStorage.getItem(`sugarCubes_saved_cart_${userKey}`);
             if (savedCartJson) {
               try {
@@ -22195,11 +23239,9 @@
               } catch (e) { }
             }
 
-            // Sync cloud orders & catalog items from Supabase
+            // Sync cloud orders & catalog items from Supabase in background
             try { syncOrdersWithSupabase(); } catch (e) { }
             try { fetchCatalogFromSupabase(); } catch (e) { }
-
-            showToast(`👋 Welcome back ${escapeHtml(user.name || 'Cashier')}! Restored your previous store records.`);
           }
         }
       }
@@ -22379,7 +23421,6 @@
           );
 
           applyAuthenticatedState(matched, true);
-          showToast(`👋 Welcome back, <strong>${escapeHtml(matched.name)}</strong> (${escapeHtml(matched.email || matched.id)})!`);
           return false;
         } else {
           showAuthAlert('❌ Invalid Email ID / Login ID or Password. Please check your credentials.', 'error');
@@ -22644,6 +23685,9 @@
       // ==========================================================================
 
       function openResignReloginModal() {
+        if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+          return; // Hidden and disabled on mobile phone
+        }
         closeShiftActionModal();
 
         const currentU = activeUser || { name: 'Store Manager', role: 'Store Manager', id: 'admin', email: 'admin@sugarcubes.com' };
@@ -23806,36 +24850,58 @@
       function switchMobileView(view, userExplicit = false) {
         const isTabChange = currentMobileTab !== view;
         currentMobileTab = view;
+        const storeView = document.getElementById('posWorkspaceGrid');
         const leftPane = document.querySelector('.pos-left-pane');
         const rightPane = document.querySelector('.pos-right-register');
         const btnMenu = document.getElementById('btnMobileTabMenu');
         const btnCart = document.getElementById('btnMobileTabCart');
         const stickyBar = document.getElementById('mobileStickyCartBar');
 
-        if (window.innerWidth <= 768) {
+        if (isMobileViewport()) {
+          if (storeView) {
+            storeView.style.display = 'flex';
+            storeView.style.flexDirection = 'column';
+          }
           if (view === 'cart') {
-            if (leftPane) leftPane.classList.add('mobile-pane-hidden');
+            if (leftPane) {
+              leftPane.classList.add('mobile-pane-hidden');
+              leftPane.style.display = 'none';
+            }
             if (rightPane) {
               rightPane.classList.remove('mobile-pane-hidden');
+              rightPane.style.display = 'block';
               if (userExplicit && isTabChange) {
                 window.scrollTo({ top: 0, behavior: 'auto' });
               }
             }
             if (btnMenu) btnMenu.classList.remove('active');
             if (btnCart) btnCart.classList.add('active');
-            if (stickyBar) stickyBar.style.display = 'none';
+            if (stickyBar) {
+              stickyBar.style.display = 'none';
+              document.body.classList.remove('has-cart-bar');
+            }
           } else {
             if (leftPane) {
               leftPane.classList.remove('mobile-pane-hidden');
+              leftPane.style.display = 'block';
               if (userExplicit && isTabChange) {
                 window.scrollTo({ top: 0, behavior: 'auto' });
               }
             }
-            if (rightPane) rightPane.classList.add('mobile-pane-hidden');
+            if (rightPane) {
+              rightPane.classList.add('mobile-pane-hidden');
+              rightPane.style.display = 'none';
+            }
             if (btnMenu) btnMenu.classList.add('active');
             if (btnCart) btnCart.classList.remove('active');
             if (stickyBar) {
-              stickyBar.style.display = activeCart.length > 0 ? 'flex' : 'none';
+              const shouldShow = (typeof activeCart !== 'undefined' && activeCart.length > 0);
+              stickyBar.style.display = shouldShow ? 'flex' : 'none';
+              if (shouldShow) {
+                document.body.classList.add('has-cart-bar');
+              } else {
+                document.body.classList.remove('has-cart-bar');
+              }
             }
           }
         } else {
@@ -25576,9 +26642,489 @@ Sugar Cubes Artisanal Cake Shop & Bakery • Coimbatore`;
         }
       });
 
+      // =========================================================================
+      // Store Franchise & Building Documents Vault Logic
+      // =========================================================================
+      const DEFAULT_STORE_DOCUMENTS = [
+        {
+          id: 'doc-franchise-01',
+          category: 'Franchise Agreement',
+          title: 'Sugar Cubes Master Franchise Agreement',
+          filename: 'Sugar_Cubes_Franchise_Agreement_2026.pdf',
+          size: '2.4 MB',
+          date: '10 Oct 2026',
+          type: 'pdf',
+          verified: true,
+          fileData: null
+        },
+        {
+          id: 'doc-building-02',
+          category: 'Building Lease',
+          title: 'Commercial Building Rental & Lease Deed',
+          filename: 'Commercial_Property_Lease_Agreement.pdf',
+          size: '1.8 MB',
+          date: '10 Oct 2026',
+          type: 'pdf',
+          verified: true,
+          fileData: null
+        },
+        {
+          id: 'doc-fssai-03',
+          category: 'FSSAI License',
+          title: 'FSSAI Central Food Safety Registration',
+          filename: 'FSSAI_License_Reg_No_124230000000.pdf',
+          size: '850 KB',
+          date: '10 Oct 2026',
+          type: 'pdf',
+          verified: true,
+          fileData: null
+        },
+        {
+          id: 'doc-gst-04',
+          category: 'GST Certificate',
+          title: 'Official GSTIN Tax Registration Certificate',
+          filename: 'GSTIN_Registration_Certificate.pdf',
+          size: '620 KB',
+          date: '10 Oct 2026',
+          type: 'pdf',
+          verified: true,
+          fileData: null
+        },
+        {
+          id: 'doc-fire-05',
+          category: 'Fire Safety NOC',
+          title: 'Municipal Building Fire & Safety NOC',
+          filename: 'Municipal_Fire_Safety_NOC_Clearance.pdf',
+          size: '1.1 MB',
+          date: '10 Oct 2026',
+          type: 'pdf',
+          verified: true,
+          fileData: null
+        }
+      ];
 
+      function getStoredDocuments() {
+        try {
+          const raw = localStorage.getItem('sugarCubesStoreDocuments');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          }
+        } catch (e) {}
+        return DEFAULT_STORE_DOCUMENTS;
+      }
 
+      function saveStoredDocuments(docs) {
+        try {
+          localStorage.setItem('sugarCubesStoreDocuments', JSON.stringify(docs));
+        } catch (e) {
+          console.warn('Could not save documents to localStorage:', e);
+        }
+      }
 
+      function openStoreDocumentsModal() {
+        const modal = document.getElementById('storeDocumentsModal');
+        if (modal) {
+          modal.style.display = 'flex';
+          renderStoreDocumentsList();
+          if (typeof playBeep === 'function') playBeep('click');
+        }
+      }
+
+      function closeStoreDocumentsModal() {
+        const modal = document.getElementById('storeDocumentsModal');
+        if (modal) modal.style.display = 'none';
+      }
+
+      function closeStoreDocumentsModalOnBackdrop(e) {
+        if (e.target && e.target.id === 'storeDocumentsModal') {
+          closeStoreDocumentsModal();
+        }
+      }
+
+      function renderStoreDocumentsList() {
+        const container = document.getElementById('storeDocsListContainer');
+        const countBadge = document.getElementById('storeDocsCountBadge');
+        if (!container) return;
+
+        const docs = getStoredDocuments();
+        if (countBadge) countBadge.textContent = `${docs.length} Document${docs.length === 1 ? '' : 's'}`;
+
+        if (docs.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 24px 16px; background: #ffffff; border: 1.5px dashed #cbd5e1; border-radius: 12px; color: #64748b;">
+              <span style="font-size: 1.8rem; display: block; margin-bottom: 6px;">📂</span>
+              <div style="font-weight: 800; font-size: 0.88rem; color: #334155;">No Documents in Vault</div>
+              <div style="font-size: 0.74rem; color: #94a3b8; margin-top: 2px;">Upload a franchise contract, lease deed or license above.</div>
+              <button type="button" onclick="restoreDefaultStoreDocuments()" style="margin-top: 10px; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 6px 12px; border-radius: 8px; font-weight: 800; font-size: 0.74rem; cursor: pointer;">
+                ↺ Restore Store Standard Archives
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = docs.map((doc) => {
+          const icon = doc.category === 'Franchise Agreement' ? '🏢' :
+                       doc.category === 'Building Lease' ? '🏛️' :
+                       doc.category === 'FSSAI License' ? '🥗' :
+                       doc.category === 'GST Certificate' ? '📄' :
+                       doc.category === 'Fire Safety NOC' ? '🚒' :
+                       doc.category === 'Store Insurance' ? '🛡️' : '📁';
+
+          const safeTitle = (doc.title || doc.filename || 'Document').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          const safeFilename = (doc.filename || 'file.pdf').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          const safeCategory = (doc.category || 'Store Document').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+          return `
+            <div class="store-doc-item-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); transition: transform 0.15s ease;">
+              <!-- Top: Icon + Title + Category + File Info -->
+              <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #eef2ff; border: 1px solid #c7d2fe; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+                  ${icon}
+                </div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                    <span style="font-weight: 800; font-size: 0.86rem; color: #0f172a; word-break: break-word;">
+                      ${safeTitle}
+                    </span>
+                    <span style="font-size: 0.62rem; font-weight: 700; color: #4338ca; background: #e0e7ff; padding: 1px 7px; border-radius: 6px; white-space: nowrap;">
+                      ${safeCategory}
+                    </span>
+                  </div>
+                  <div style="font-size: 0.72rem; color: #64748b; margin-top: 3px;">
+                    📁 ${safeFilename} • ${doc.size || 'PDF'} • ${doc.date || 'Active'}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom: 4 Action Buttons Row (View, Download, Edit, Delete) -->
+              <div style="display: flex; align-items: center; gap: 6px; justify-content: flex-end; padding-top: 6px; border-top: 1px dashed #f1f5f9; flex-wrap: wrap;">
+                <!-- 👁️ View Button: Opens preview only -->
+                <button type="button" class="btn-doc-action-view" onclick="previewStoreDocument('${doc.id}')" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; padding: 5px 11px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="Open and preview document">
+                  <span>👁️ View</span>
+                </button>
+
+                <!-- ⬇️ Download Button: Directly downloads file -->
+                <button type="button" class="btn-doc-action-download" onclick="downloadStoreDocument('${doc.id}')" style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 5px 11px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="Download document to device">
+                  <span>⬇️ Download</span>
+                </button>
+
+                <!-- ✏️ Edit Button: Edit title & category -->
+                <button type="button" class="btn-doc-action-edit" onclick="openEditStoreDocumentModal('${doc.id}')" style="background: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 5px 10px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;" title="Edit document name or category">
+                  <span>✏️ Edit</span>
+                </button>
+
+                <!-- 🗑️ Delete Button: Remove document -->
+                <button type="button" class="btn-doc-action-delete" onclick="deleteStoreDocument('${doc.id}')" style="background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; padding: 5px 9px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;" title="Delete document">
+                  <span>🗑️</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function restoreDefaultStoreDocuments() {
+        saveStoredDocuments(DEFAULT_STORE_DOCUMENTS);
+        renderStoreDocumentsList();
+        if (typeof showToast === 'function') showToast('↺ Standard store archive records restored!');
+      }
+
+      // -------------------------------------------------------------------------
+      // 👁️ Live Preview Document (Opens in-app modal only, NO DOWNLOAD)
+      // -------------------------------------------------------------------------
+      function previewStoreDocument(id) {
+        const docs = getStoredDocuments();
+        const doc = docs.find(d => d.id === id);
+        if (!doc) return;
+
+        const modal = document.getElementById('storeDocPreviewModal');
+        const titleEl = document.getElementById('previewDocTitle');
+        const catEl = document.getElementById('previewDocCategoryBadge');
+        const iconEl = document.getElementById('previewDocIcon');
+        const contentEl = document.getElementById('previewDocContentArea');
+        const dlBtn = document.getElementById('previewDownloadBtn');
+        const footerInfo = document.getElementById('previewDocFooterInfo');
+
+        if (!modal || !contentEl) return;
+
+        const icon = doc.category === 'Franchise Agreement' ? '🏢' :
+                     doc.category === 'Building Lease' ? '🏛️' :
+                     doc.category === 'FSSAI License' ? '🥗' :
+                     doc.category === 'GST Certificate' ? '📄' :
+                     doc.category === 'Fire Safety NOC' ? '🚒' :
+                     doc.category === 'Store Insurance' ? '🛡️' : '📁';
+
+        if (titleEl) titleEl.textContent = doc.title || doc.filename;
+        if (catEl) catEl.textContent = doc.category;
+        if (iconEl) iconEl.textContent = icon;
+        if (footerInfo) footerInfo.textContent = `${doc.filename} • ${doc.size || 'PDF'} • Registered ${doc.date}`;
+        if (dlBtn) dlBtn.onclick = () => downloadStoreDocument(doc.id);
+
+        if (doc.fileData) {
+          if (doc.fileData.startsWith('data:image/')) {
+            // Image Preview
+            contentEl.innerHTML = `
+              <div style="text-align: center; width: 100%;">
+                <img src="${doc.fileData}" alt="${doc.title}" style="max-width: 100%; max-height: 60vh; border-radius: 10px; object-fit: contain; box-shadow: 0 4px 16px rgba(15,23,42,0.12);">
+                <div style="margin-top: 8px; font-size: 0.74rem; color: #64748b;">Image Document • ${doc.size}</div>
+              </div>
+            `;
+          } else if (doc.fileData.startsWith('data:application/pdf')) {
+            // PDF Embedded Frame Preview
+            contentEl.innerHTML = `
+              <div style="width: 100%; height: 58vh; display: flex; flex-direction: column;">
+                <iframe src="${doc.fileData}" style="width: 100%; height: 100%; border: 1.5px solid #cbd5e1; border-radius: 10px;" frameborder="0"></iframe>
+              </div>
+            `;
+          } else {
+            // Generic Data File Viewer
+            contentEl.innerHTML = `
+              <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 24px; text-align: center; max-width: 440px; width: 100%;">
+                <span style="font-size: 2.4rem; display: block; margin-bottom: 8px;">📄</span>
+                <h4 style="margin: 0; font-size: 1rem; color: #0f172a; font-weight: 800;">${doc.title}</h4>
+                <p style="margin: 6px 0 14px; font-size: 0.76rem; color: #64748b;">Stored Digital Vault Document (${doc.size})</p>
+                <div style="display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">
+                  ✓ Active & Encrypted on POS
+                </div>
+              </div>
+            `;
+          }
+        } else {
+          // Official Certified Parchment Certificate Card
+          contentEl.innerHTML = `
+            <div style="background: #ffffff; border: 2px solid #0f172a; border-radius: 12px; padding: 20px 22px; width: 100%; max-width: 500px; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 4px 20px rgba(15,23,42,0.06);">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 14px;">
+                <div>
+                  <div style="font-size: 0.68rem; font-weight: 800; color: #4338ca; text-transform: uppercase; letter-spacing: 0.5px;">Sugar Cubes Store Archives</div>
+                  <h3 style="margin: 2px 0 0; font-size: 1.05rem; font-weight: 900; color: #0f172a;">${doc.title}</h3>
+                </div>
+                <span style="background: #ecfdf5; color: #047857; border: 1.5px solid #10b981; font-size: 0.64rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-transform: uppercase;">
+                  VERIFIED
+                </span>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.74rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 14px;">
+                <div>
+                  <span style="color: #64748b; font-weight: 600;">Category:</span>
+                  <div style="color: #0f172a; font-weight: 800;">${doc.category}</div>
+                </div>
+                <div>
+                  <span style="color: #64748b; font-weight: 600;">Archive File:</span>
+                  <div style="color: #0f172a; font-weight: 800;">${doc.filename}</div>
+                </div>
+                <div>
+                  <span style="color: #64748b; font-weight: 600;">Date Sanctioned:</span>
+                  <div style="color: #0f172a; font-weight: 800;">${doc.date}</div>
+                </div>
+                <div>
+                  <span style="color: #64748b; font-weight: 600;">Vault Status:</span>
+                  <div style="color: #059669; font-weight: 800;">● Active in Terminal</div>
+                </div>
+              </div>
+
+              <div style="font-size: 0.74rem; color: #475569; line-height: 1.45; border-left: 3px solid #6366f1; padding-left: 10px; margin-bottom: 14px;">
+                This official store instrument has been digitally registered and authenticated under Sugar Cubes Store Leadership & Management Archives.
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #cbd5e1; padding-top: 10px; font-size: 0.70rem; color: #94a3b8;">
+                <span>Digital Seal ID: SC-DOC-${doc.id.toUpperCase()}</span>
+                <span style="font-weight: 700; color: #334155;">Authorized Store Signatory ✓</span>
+              </div>
+            </div>
+          `;
+        }
+
+        modal.style.display = 'flex';
+        if (typeof playBeep === 'function') playBeep('click');
+      }
+
+      function closeStoreDocPreviewModal() {
+        const modal = document.getElementById('storeDocPreviewModal');
+        if (modal) modal.style.display = 'none';
+      }
+
+      function closeStoreDocPreviewModalOnBackdrop(e) {
+        if (e.target && e.target.id === 'storeDocPreviewModal') {
+          closeStoreDocPreviewModal();
+        }
+      }
+
+      // -------------------------------------------------------------------------
+      // ✏️ Edit Document Metadata Modal
+      // -------------------------------------------------------------------------
+      function openEditStoreDocumentModal(id) {
+        const docs = getStoredDocuments();
+        const doc = docs.find(d => d.id === id);
+        if (!doc) return;
+
+        const modal = document.getElementById('storeDocEditModal');
+        const hiddenId = document.getElementById('editDocIdHidden');
+        const titleInput = document.getElementById('editDocTitleInput');
+        const catSelect = document.getElementById('editDocCategorySelect');
+
+        if (!modal || !hiddenId || !titleInput || !catSelect) return;
+
+        hiddenId.value = doc.id;
+        titleInput.value = doc.title || doc.filename;
+        catSelect.value = doc.category || 'Franchise Agreement';
+
+        modal.style.display = 'flex';
+        if (typeof playBeep === 'function') playBeep('click');
+      }
+
+      function closeStoreDocEditModal() {
+        const modal = document.getElementById('storeDocEditModal');
+        if (modal) modal.style.display = 'none';
+      }
+
+      function closeStoreDocEditModalOnBackdrop(e) {
+        if (e.target && e.target.id === 'storeDocEditModal') {
+          closeStoreDocEditModal();
+        }
+      }
+
+      function saveEditedStoreDocument() {
+        const hiddenId = document.getElementById('editDocIdHidden');
+        const titleInput = document.getElementById('editDocTitleInput');
+        const catSelect = document.getElementById('editDocCategorySelect');
+
+        if (!hiddenId || !titleInput || !catSelect) return;
+
+        const docId = hiddenId.value;
+        const newTitle = titleInput.value.trim();
+        const newCategory = catSelect.value;
+
+        if (!newTitle) {
+          if (typeof showToast === 'function') showToast('⚠️ Document title cannot be empty.');
+          return;
+        }
+
+        const docs = getStoredDocuments();
+        const docIndex = docs.findIndex(d => d.id === docId);
+        if (docIndex !== -1) {
+          docs[docIndex].title = newTitle;
+          docs[docIndex].category = newCategory;
+          saveStoredDocuments(docs);
+          renderStoreDocumentsList();
+          closeStoreDocEditModal();
+          if (typeof showToast === 'function') showToast('✅ Document details updated successfully!');
+        }
+      }
+
+      function handleStoreDocFileSelected(event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        const categorySelect = document.getElementById('storeDocCategorySelect');
+        const titleInput = document.getElementById('storeDocTitleInput');
+
+        const category = categorySelect ? categorySelect.value : 'Franchise Agreement';
+        const customTitle = titleInput && titleInput.value.trim() ? titleInput.value.trim() : file.name;
+
+        const sizeFormatted = file.size > 1024 * 1024
+          ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
+          : `${Math.round(file.size / 1024)} KB`;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const fileDataUrl = e.target.result;
+          const docs = getStoredDocuments();
+          const newDoc = {
+            id: 'doc-custom-' + Date.now(),
+            category: category,
+            title: customTitle,
+            filename: file.name,
+            size: sizeFormatted,
+            date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+            type: file.type || 'application/pdf',
+            verified: false,
+            fileData: fileDataUrl
+          };
+
+          docs.unshift(newDoc);
+          saveStoredDocuments(docs);
+          renderStoreDocumentsList();
+
+          if (titleInput) titleInput.value = '';
+          event.target.value = '';
+
+          if (typeof showToast === 'function') {
+            showToast(`✅ "${file.name}" uploaded to Store Documents vault!`);
+          }
+        };
+
+        reader.onerror = function() {
+          if (typeof showToast === 'function') {
+            showToast('⚠️ Failed to read uploaded file.');
+          }
+        };
+
+        reader.readAsDataURL(file);
+      }
+
+      // -------------------------------------------------------------------------
+      // ⬇️ Download Document (Triggers download only)
+      // -------------------------------------------------------------------------
+      function downloadStoreDocument(id) {
+        const docs = getStoredDocuments();
+        const doc = docs.find(d => d.id === id);
+        if (!doc) return;
+
+        if (doc.fileData) {
+          const link = document.createElement('a');
+          link.href = doc.fileData;
+          link.download = doc.filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          if (typeof showToast === 'function') showToast(`📥 Downloading "${doc.filename}"`);
+        } else {
+          const sampleBlob = new Blob([
+            `SUGAR CUBES OFFICIAL STORE DOCUMENT ARCHIVE\n` +
+            `==========================================\n` +
+            `Category: ${doc.category}\n` +
+            `Document Title: ${doc.title}\n` +
+            `Filename: ${doc.filename}\n` +
+            `Date Registered: ${doc.date}\n` +
+            `Status: VERIFIED & ACTIVE IN STORE ARCHIVES\n\n` +
+            `Franchise Location: Store #1, Sugar Cubes Main Street\n` +
+            `Building Property Deed: Commercial Commercial Lease Sanctioned\n` +
+            `Authorized Signatory: Store Owner & Executive Management\n` +
+            `==========================================\n` +
+            `This document is certified on the POS terminal vault.`
+          ], { type: 'text/plain;charset=utf-8' });
+
+          const url = URL.createObjectURL(sampleBlob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = doc.filename.replace(/\.pdf$/i, '.txt');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          if (typeof showToast === 'function') showToast(`📥 Downloading "${doc.filename}"`);
+        }
+      }
+
+      // -------------------------------------------------------------------------
+      // 🗑️ Delete Document
+      // -------------------------------------------------------------------------
+      function deleteStoreDocument(id) {
+        let docs = getStoredDocuments();
+        const docToDelete = docs.find(d => d.id === id);
+        const docName = docToDelete ? (docToDelete.title || docToDelete.filename) : 'Document';
+
+        if (!confirm(`Are you sure you want to delete "${docName}" from the store vault?`)) {
+          return;
+        }
+
+        docs = docs.filter(d => d.id !== id);
+        saveStoredDocuments(docs);
+        renderStoreDocumentsList();
+        if (typeof showToast === 'function') showToast(`🗑️ "${docName}" removed from vault`);
+      }
 
       // ==========================================================================
       // 🌙 POS Terminal 5-Second Inactivity Auto-Sleep & Screen Saver Engine

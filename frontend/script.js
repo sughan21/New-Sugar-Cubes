@@ -300,9 +300,6 @@ async function handleStoreLogin(event) {
     localStorage.setItem('sugar_cubes_store', JSON.stringify(authenticatedStore));
     applyAuthenticatedState(authenticatedStore, true);
     checkAuthSession();
-    if (typeof showToast === 'function') {
-      showToast(`Welcome! Logged into ${authenticatedStore.name}`, 'success');
-    }
   }
 }
 
@@ -541,6 +538,13 @@ function toggleAudioSound() {
   const profBtn = document.getElementById('profSoundToggleBtn');
   if (profBtn) {
     profBtn.innerHTML = soundEnabled ? '🔔 Sound: ON' : '🔕 Sound: OFF';
+  }
+  const mobSoundBtn = document.getElementById('mobileHeaderSoundBtn');
+  if (mobSoundBtn) {
+    const iconSpan = mobSoundBtn.querySelector('.mobile-sound-icon') || mobSoundBtn;
+    iconSpan.textContent = soundEnabled ? '🔔' : '🔕';
+    mobSoundBtn.setAttribute('title', soundEnabled ? 'Sound: ON (Tap to mute)' : 'Sound: OFF (Tap to unmute)');
+    mobSoundBtn.classList.toggle('sound-muted', !soundEnabled);
   }
   showToast(soundEnabled ? '🔔 Register sound enabled' : '🔕 Register sound muted');
 }
@@ -842,7 +846,6 @@ function directAddCatalogItem(itemNameOrId) {
 
   playBeep('add');
   renderCart();
-  showToast(`✨ Added <strong>${escapeHtml(product.name)}</strong> to Order!`);
 }
 
 function stepCartItem(index, delta) {
@@ -2018,8 +2021,10 @@ function renderCart() {
   if (mobileStickyBar) {
     if (activeCart.length > 0 && currentMobileTab === 'menu' && window.innerWidth <= 768) {
       mobileStickyBar.style.display = 'flex';
+      document.body.classList.add('has-cart-bar');
     } else {
       mobileStickyBar.style.display = 'none';
+      document.body.classList.remove('has-cart-bar');
     }
   }
 }
@@ -2880,7 +2885,7 @@ let mobileScrollY = 0;
 let isPoppingFromScript = false;
 
 function isMobileViewport() {
-  return window.innerWidth <= 768;
+  return window.innerWidth <= 768 || (window.innerHeight <= 520 && window.innerWidth <= 960);
 }
 
 function updateMobileScrollLock() {
@@ -3900,6 +3905,11 @@ function refreshDailySalesAnalytics() {
 let currentDesktopPage = 'store'; // 'store' or 'sales'
 
 function switchDesktopPage(page) {
+  if (isMobileViewport()) {
+    switchMobileView(currentMobileTab || 'menu');
+    return;
+  }
+
   currentDesktopPage = page;
   try {
     sessionStorage.setItem('sugarCubesCurrentDesktopPage', page);
@@ -4159,9 +4169,8 @@ function openOrderHistoryModal(mode = null, fromProfile = false, fromRestore = f
     if (isMobile) {
       bottomEl.innerHTML = `
         <div class="hist-mobile-cmd-dock">
-          ${showBack ? `<button type="button" class="btn-hist-dock btn-dock-back" onclick="closeOrderHistoryModal();">${backLabel}</button>` : `<button type="button" class="btn-hist-dock btn-dock-close" onclick="closeOrderHistoryModal();">✕ Close</button>`}
           <button type="button" class="btn-hist-dock btn-dock-export" onclick="exportToExcel()" title="Export all sales to CSV">📈 Export CSV</button>
-          <button type="button" class="btn-hist-dock btn-dock-audit" onclick="openDailyReportModal('all', ${showBack})">📊 Sales Audit</button>
+          <button type="button" class="btn-hist-dock btn-dock-audit" onclick="openDailyReportModal('all', false)">📊 Sales Audit</button>
         </div>
       `;
     } else {
@@ -4821,12 +4830,18 @@ function openDailyReportModal(mode = null, fromProfile = false, fromRestore = fa
       backLabel = '← Back to Store';
     }
 
-    const showBack = fromProfile || isMobile || (mobileModalStack.length > 0);
-    bottomEl.innerHTML = `
-      ${showBack ? `<button type="button" class="btn-reg-secondary" style="padding: 8px 14px; font-size: 0.84rem;" onclick="closeDailyReportModal();">${backLabel}</button>` : ''}
-      <button type="button" class="btn-dismiss" onclick="closeDailyReportModal()">Close</button>
-      <button type="button" class="btn-primary-action" onclick="printDailyReport()">🖨️ Print Statement</button>
-    `;
+    if (isMobile) {
+      bottomEl.innerHTML = `
+        <button type="button" class="btn-primary-action" onclick="printDailyReport()">🖨️ Print Statement</button>
+      `;
+    } else {
+      const showBack = fromProfile || (mobileModalStack.length > 0);
+      bottomEl.innerHTML = `
+        ${showBack ? `<button type="button" class="btn-reg-secondary" style="padding: 8px 14px; font-size: 0.84rem;" onclick="closeDailyReportModal();">${backLabel}</button>` : ''}
+        <button type="button" class="btn-dismiss" onclick="closeDailyReportModal()">Close</button>
+        <button type="button" class="btn-primary-action" onclick="printDailyReport()">🖨️ Print Statement</button>
+      `;
+    }
   }
 
   const modal = document.getElementById('dailyReportModal');
@@ -5209,42 +5224,8 @@ function exportToExcel() {
 // ==========================================================================
 
 function showToast(msgHtml) {
-  let container = document.getElementById('posToastContainer');
-  if (!container) {
-    container = document.createElement('div');
-    container.id = 'posToastContainer';
-    document.body.appendChild(container);
-  }
-
-  // Avoid identical duplicate toasts stacking simultaneously
-  const existing = container.querySelectorAll('.pos-toast');
-  for (let el of existing) {
-    if (el.innerHTML === msgHtml) return;
-  }
-
-  const toast = document.createElement('div');
-  toast.className = 'pos-toast';
-  toast.innerHTML = msgHtml;
-  container.appendChild(toast);
-
-  let dismissTimeout = null;
-  const triggerDismiss = () => {
-    dismissTimeout = setTimeout(() => {
-      toast.style.transition = 'all 0.3s ease-out';
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateY(10px)';
-      setTimeout(() => { toast.remove(); }, 300);
-    }, 3200);
-  };
-
-  toast.addEventListener('mouseenter', () => {
-    if (dismissTimeout) clearTimeout(dismissTimeout);
-  });
-  toast.addEventListener('mouseleave', () => {
-    triggerDismiss();
-  });
-
-  triggerDismiss();
+  // Silent background operation: all toast popups hidden per user request
+  return;
 }
 
 function escapeHtml(text) {
@@ -6328,9 +6309,8 @@ function applyAuthenticatedState(user, isInteractiveLogin = false) {
       if (notesInput) notesInput.value = '';
       
       localStorage.setItem(`sugarCubes_user_has_logged_before_${userKey}`, 'true');
-      showToast(`✨ Welcome ${escapeHtml(user.name || 'Cashier')}! Workspace loaded with fresh clean register.`);
     } else {
-      // 🔄 EXISTING USER LOGIN: Load and restore previous store records & active cart
+      // 🔄 EXISTING USER LOGIN: Load and restore previous store records & active cart silently in background
       const savedCartJson = localStorage.getItem(`sugarCubes_saved_cart_${userKey}`);
       if (savedCartJson) {
         try {
@@ -6339,11 +6319,9 @@ function applyAuthenticatedState(user, isInteractiveLogin = false) {
         } catch (e) {}
       }
 
-      // Sync cloud orders & catalog items from Supabase
+      // Sync cloud orders & catalog items from Supabase in background
       try { syncOrdersWithSupabase(); } catch (e) {}
       try { fetchCatalogFromSupabase(); } catch (e) {}
-
-      showToast(`👋 Welcome back ${escapeHtml(user.name || 'Cashier')}! Restored your previous store records.`);
     }
   }
 }
@@ -6757,7 +6735,6 @@ async function handleSignInSubmit(e) {
     );
 
     applyAuthenticatedState(matched, true);
-    showToast(`👋 Welcome back, <strong>${escapeHtml(matched.name)}</strong> (${escapeHtml(matched.email || matched.id)})!`);
     return false;
   } else {
     showAuthAlert('❌ Invalid Email ID / Login ID or Password. Please check your credentials.', 'error');
@@ -7020,6 +6997,9 @@ function closeShiftActionModalOnBackdrop(e) {
 // ==========================================================================
 
 function openResignReloginModal() {
+  if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+    return; // Hidden and disabled on mobile phone
+  }
   closeShiftActionModal();
 
   const currentU = activeUser || { name: 'Store Manager', role: 'Store Manager', id: 'admin', email: 'admin@sugarcubes.com' };
@@ -8182,36 +8162,58 @@ let currentMobileTab = 'menu'; // 'menu' | 'cart'
 function switchMobileView(view, userExplicit = false) {
   const isTabChange = currentMobileTab !== view;
   currentMobileTab = view;
+  const storeView = document.getElementById('posWorkspaceGrid');
   const leftPane = document.querySelector('.pos-left-pane');
   const rightPane = document.querySelector('.pos-right-register');
   const btnMenu = document.getElementById('btnMobileTabMenu');
   const btnCart = document.getElementById('btnMobileTabCart');
   const stickyBar = document.getElementById('mobileStickyCartBar');
 
-  if (window.innerWidth <= 768) {
+  if (isMobileViewport()) {
+    if (storeView) {
+      storeView.style.display = 'flex';
+      storeView.style.flexDirection = 'column';
+    }
     if (view === 'cart') {
-      if (leftPane) leftPane.classList.add('mobile-pane-hidden');
+      if (leftPane) {
+        leftPane.classList.add('mobile-pane-hidden');
+        leftPane.style.display = 'none';
+      }
       if (rightPane) {
         rightPane.classList.remove('mobile-pane-hidden');
+        rightPane.style.display = 'block';
         if (userExplicit && isTabChange) {
           window.scrollTo({ top: 0, behavior: 'auto' });
         }
       }
       if (btnMenu) btnMenu.classList.remove('active');
       if (btnCart) btnCart.classList.add('active');
-      if (stickyBar) stickyBar.style.display = 'none';
+      if (stickyBar) {
+        stickyBar.style.display = 'none';
+        document.body.classList.remove('has-cart-bar');
+      }
     } else {
       if (leftPane) {
         leftPane.classList.remove('mobile-pane-hidden');
+        leftPane.style.display = 'block';
         if (userExplicit && isTabChange) {
           window.scrollTo({ top: 0, behavior: 'auto' });
         }
       }
-      if (rightPane) rightPane.classList.add('mobile-pane-hidden');
+      if (rightPane) {
+        rightPane.classList.add('mobile-pane-hidden');
+        rightPane.style.display = 'none';
+      }
       if (btnMenu) btnMenu.classList.add('active');
       if (btnCart) btnCart.classList.remove('active');
       if (stickyBar) {
-        stickyBar.style.display = activeCart.length > 0 ? 'flex' : 'none';
+        const shouldShow = (typeof activeCart !== 'undefined' && activeCart.length > 0);
+        stickyBar.style.display = shouldShow ? 'flex' : 'none';
+        if (shouldShow) {
+          document.body.classList.add('has-cart-bar');
+        } else {
+          document.body.classList.remove('has-cart-bar');
+        }
       }
     }
   } else {
@@ -9957,6 +9959,491 @@ document.addEventListener('DOMContentLoaded', () => {
     switchDesktopPage(currentDesktopPage || 'store');
   }
 });
+
+// =========================================================================
+// Store Franchise & Building Documents Vault Logic
+// =========================================================================
+const DEFAULT_STORE_DOCUMENTS = [
+  {
+    id: 'doc-franchise-01',
+    category: 'Franchise Agreement',
+    title: 'Sugar Cubes Master Franchise Agreement',
+    filename: 'Sugar_Cubes_Franchise_Agreement_2026.pdf',
+    size: '2.4 MB',
+    date: '10 Oct 2026',
+    type: 'pdf',
+    verified: true,
+    fileData: null
+  },
+  {
+    id: 'doc-building-02',
+    category: 'Building Lease',
+    title: 'Commercial Building Rental & Lease Deed',
+    filename: 'Commercial_Property_Lease_Agreement.pdf',
+    size: '1.8 MB',
+    date: '10 Oct 2026',
+    type: 'pdf',
+    verified: true,
+    fileData: null
+  },
+  {
+    id: 'doc-fssai-03',
+    category: 'FSSAI License',
+    title: 'FSSAI Central Food Safety Registration',
+    filename: 'FSSAI_License_Reg_No_124230000000.pdf',
+    size: '850 KB',
+    date: '10 Oct 2026',
+    type: 'pdf',
+    verified: true,
+    fileData: null
+  },
+  {
+    id: 'doc-gst-04',
+    category: 'GST Certificate',
+    title: 'Official GSTIN Tax Registration Certificate',
+    filename: 'GSTIN_Registration_Certificate.pdf',
+    size: '620 KB',
+    date: '10 Oct 2026',
+    type: 'pdf',
+    verified: true,
+    fileData: null
+  },
+  {
+    id: 'doc-fire-05',
+    category: 'Fire Safety NOC',
+    title: 'Municipal Building Fire & Safety NOC',
+    filename: 'Municipal_Fire_Safety_NOC_Clearance.pdf',
+    size: '1.1 MB',
+    date: '10 Oct 2026',
+    type: 'pdf',
+    verified: true,
+    fileData: null
+  }
+];
+
+function getStoredDocuments() {
+  try {
+    const raw = localStorage.getItem('sugarCubesStoreDocuments');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {}
+  return DEFAULT_STORE_DOCUMENTS;
+}
+
+function saveStoredDocuments(docs) {
+  try {
+    localStorage.setItem('sugarCubesStoreDocuments', JSON.stringify(docs));
+  } catch (e) {
+    console.warn('Could not save documents to localStorage:', e);
+  }
+}
+
+function openStoreDocumentsModal() {
+  const modal = document.getElementById('storeDocumentsModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    renderStoreDocumentsList();
+    if (typeof playBeep === 'function') playBeep('click');
+  }
+}
+
+function closeStoreDocumentsModal() {
+  const modal = document.getElementById('storeDocumentsModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function closeStoreDocumentsModalOnBackdrop(e) {
+  if (e.target && e.target.id === 'storeDocumentsModal') {
+    closeStoreDocumentsModal();
+  }
+}
+
+function renderStoreDocumentsList() {
+  const container = document.getElementById('storeDocsListContainer');
+  const countBadge = document.getElementById('storeDocsCountBadge');
+  if (!container) return;
+
+  const docs = getStoredDocuments();
+  if (countBadge) countBadge.textContent = `${docs.length} Document${docs.length === 1 ? '' : 's'}`;
+
+  if (docs.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 24px 16px; background: #ffffff; border: 1.5px dashed #cbd5e1; border-radius: 12px; color: #64748b;">
+        <span style="font-size: 1.8rem; display: block; margin-bottom: 6px;">📂</span>
+        <div style="font-weight: 800; font-size: 0.88rem; color: #334155;">No Documents in Vault</div>
+        <div style="font-size: 0.74rem; color: #94a3b8; margin-top: 2px;">Upload a franchise contract, lease deed or license above.</div>
+        <button type="button" onclick="restoreDefaultStoreDocuments()" style="margin-top: 10px; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 6px 12px; border-radius: 8px; font-weight: 800; font-size: 0.74rem; cursor: pointer;">
+          ↺ Restore Store Standard Archives
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = docs.map((doc) => {
+    const icon = doc.category === 'Franchise Agreement' ? '🏢' :
+                 doc.category === 'Building Lease' ? '🏛️' :
+                 doc.category === 'FSSAI License' ? '🥗' :
+                 doc.category === 'GST Certificate' ? '📄' :
+                 doc.category === 'Fire Safety NOC' ? '🚒' :
+                 doc.category === 'Store Insurance' ? '🛡️' : '📁';
+
+    const safeTitle = (doc.title || doc.filename || 'Document').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const safeFilename = (doc.filename || 'file.pdf').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const safeCategory = (doc.category || 'Store Document').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    return `
+      <div class="store-doc-item-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); transition: transform 0.15s ease;">
+        <!-- Top: Icon + Title + Category + File Info -->
+        <div style="display: flex; align-items: flex-start; gap: 10px;">
+          <div style="width: 36px; height: 36px; border-radius: 10px; background: #eef2ff; border: 1px solid #c7d2fe; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+            ${icon}
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <span style="font-weight: 800; font-size: 0.86rem; color: #0f172a; word-break: break-word;">
+                ${safeTitle}
+              </span>
+              <span style="font-size: 0.62rem; font-weight: 700; color: #4338ca; background: #e0e7ff; padding: 1px 7px; border-radius: 6px; white-space: nowrap;">
+                ${safeCategory}
+              </span>
+            </div>
+            <div style="font-size: 0.72rem; color: #64748b; margin-top: 3px;">
+              📁 ${safeFilename} • ${doc.size || 'PDF'} • ${doc.date || 'Active'}
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom: 4 Action Buttons Row (View, Download, Edit, Delete) -->
+        <div style="display: flex; align-items: center; gap: 6px; justify-content: flex-end; padding-top: 6px; border-top: 1px dashed #f1f5f9; flex-wrap: wrap;">
+          <!-- 👁️ View Button: Opens preview only -->
+          <button type="button" class="btn-doc-action-view" onclick="previewStoreDocument('${doc.id}')" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; padding: 5px 11px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="Open and preview document">
+            <span>👁️ View</span>
+          </button>
+
+          <!-- ⬇️ Download Button: Directly downloads file -->
+          <button type="button" class="btn-doc-action-download" onclick="downloadStoreDocument('${doc.id}')" style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 5px 11px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="Download document to device">
+            <span>⬇️ Download</span>
+          </button>
+
+          <!-- ✏️ Edit Button: Edit title & category -->
+          <button type="button" class="btn-doc-action-edit" onclick="openEditStoreDocumentModal('${doc.id}')" style="background: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 5px 10px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;" title="Edit document name or category">
+            <span>✏️ Edit</span>
+          </button>
+
+          <!-- 🗑️ Delete Button: Remove document -->
+          <button type="button" class="btn-doc-action-delete" onclick="deleteStoreDocument('${doc.id}')" style="background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; padding: 5px 9px; border-radius: 7px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;" title="Delete document">
+            <span>🗑️</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function restoreDefaultStoreDocuments() {
+  saveStoredDocuments(DEFAULT_STORE_DOCUMENTS);
+  renderStoreDocumentsList();
+  if (typeof showToast === 'function') showToast('↺ Standard store archive records restored!');
+}
+
+// -------------------------------------------------------------------------
+// 👁️ Live Preview Document (Opens in-app modal only, NO DOWNLOAD)
+// -------------------------------------------------------------------------
+function previewStoreDocument(id) {
+  const docs = getStoredDocuments();
+  const doc = docs.find(d => d.id === id);
+  if (!doc) return;
+
+  const modal = document.getElementById('storeDocPreviewModal');
+  const titleEl = document.getElementById('previewDocTitle');
+  const catEl = document.getElementById('previewDocCategoryBadge');
+  const iconEl = document.getElementById('previewDocIcon');
+  const contentEl = document.getElementById('previewDocContentArea');
+  const dlBtn = document.getElementById('previewDownloadBtn');
+  const footerInfo = document.getElementById('previewDocFooterInfo');
+
+  if (!modal || !contentEl) return;
+
+  const icon = doc.category === 'Franchise Agreement' ? '🏢' :
+               doc.category === 'Building Lease' ? '🏛️' :
+               doc.category === 'FSSAI License' ? '🥗' :
+               doc.category === 'GST Certificate' ? '📄' :
+               doc.category === 'Fire Safety NOC' ? '🚒' :
+               doc.category === 'Store Insurance' ? '🛡️' : '📁';
+
+  if (titleEl) titleEl.textContent = doc.title || doc.filename;
+  if (catEl) catEl.textContent = doc.category;
+  if (iconEl) iconEl.textContent = icon;
+  if (footerInfo) footerInfo.textContent = `${doc.filename} • ${doc.size || 'PDF'} • Registered ${doc.date}`;
+  if (dlBtn) dlBtn.onclick = () => downloadStoreDocument(doc.id);
+
+  if (doc.fileData) {
+    if (doc.fileData.startsWith('data:image/')) {
+      // Image Preview
+      contentEl.innerHTML = `
+        <div style="text-align: center; width: 100%;">
+          <img src="${doc.fileData}" alt="${doc.title}" style="max-width: 100%; max-height: 60vh; border-radius: 10px; object-fit: contain; box-shadow: 0 4px 16px rgba(15,23,42,0.12);">
+          <div style="margin-top: 8px; font-size: 0.74rem; color: #64748b;">Image Document • ${doc.size}</div>
+        </div>
+      `;
+    } else if (doc.fileData.startsWith('data:application/pdf')) {
+      // PDF Embedded Frame Preview
+      contentEl.innerHTML = `
+        <div style="width: 100%; height: 58vh; display: flex; flex-direction: column;">
+          <iframe src="${doc.fileData}" style="width: 100%; height: 100%; border: 1.5px solid #cbd5e1; border-radius: 10px;" frameborder="0"></iframe>
+        </div>
+      `;
+    } else {
+      // Generic Data File Viewer
+      contentEl.innerHTML = `
+        <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 24px; text-align: center; max-width: 440px; width: 100%;">
+          <span style="font-size: 2.4rem; display: block; margin-bottom: 8px;">📄</span>
+          <h4 style="margin: 0; font-size: 1rem; color: #0f172a; font-weight: 800;">${doc.title}</h4>
+          <p style="margin: 6px 0 14px; font-size: 0.76rem; color: #64748b;">Stored Digital Vault Document (${doc.size})</p>
+          <div style="display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">
+            ✓ Active & Encrypted on POS
+          </div>
+        </div>
+      `;
+    }
+  } else {
+    // Official Certified Parchment Certificate Card
+    contentEl.innerHTML = `
+      <div style="background: #ffffff; border: 2px solid #0f172a; border-radius: 12px; padding: 20px 22px; width: 100%; max-width: 500px; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 4px 20px rgba(15,23,42,0.06);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 14px;">
+          <div>
+            <div style="font-size: 0.68rem; font-weight: 800; color: #4338ca; text-transform: uppercase; letter-spacing: 0.5px;">Sugar Cubes Store Archives</div>
+            <h3 style="margin: 2px 0 0; font-size: 1.05rem; font-weight: 900; color: #0f172a;">${doc.title}</h3>
+          </div>
+          <span style="background: #ecfdf5; color: #047857; border: 1.5px solid #10b981; font-size: 0.64rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-transform: uppercase;">
+            VERIFIED
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.74rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 14px;">
+          <div>
+            <span style="color: #64748b; font-weight: 600;">Category:</span>
+            <div style="color: #0f172a; font-weight: 800;">${doc.category}</div>
+          </div>
+          <div>
+            <span style="color: #64748b; font-weight: 600;">Archive File:</span>
+            <div style="color: #0f172a; font-weight: 800;">${doc.filename}</div>
+          </div>
+          <div>
+            <span style="color: #64748b; font-weight: 600;">Date Sanctioned:</span>
+            <div style="color: #0f172a; font-weight: 800;">${doc.date}</div>
+          </div>
+          <div>
+            <span style="color: #64748b; font-weight: 600;">Vault Status:</span>
+            <div style="color: #059669; font-weight: 800;">● Active in Terminal</div>
+          </div>
+        </div>
+
+        <div style="font-size: 0.74rem; color: #475569; line-height: 1.45; border-left: 3px solid #6366f1; padding-left: 10px; margin-bottom: 14px;">
+          This official store instrument has been digitally registered and authenticated under Sugar Cubes Store Leadership & Management Archives.
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #cbd5e1; padding-top: 10px; font-size: 0.70rem; color: #94a3b8;">
+          <span>Digital Seal ID: SC-DOC-${doc.id.toUpperCase()}</span>
+          <span style="font-weight: 700; color: #334155;">Authorized Store Signatory ✓</span>
+        </div>
+      </div>
+    `;
+  }
+
+  modal.style.display = 'flex';
+  if (typeof playBeep === 'function') playBeep('click');
+}
+
+function closeStoreDocPreviewModal() {
+  const modal = document.getElementById('storeDocPreviewModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function closeStoreDocPreviewModalOnBackdrop(e) {
+  if (e.target && e.target.id === 'storeDocPreviewModal') {
+    closeStoreDocPreviewModal();
+  }
+}
+
+// -------------------------------------------------------------------------
+// ✏️ Edit Document Metadata Modal
+// -------------------------------------------------------------------------
+function openEditStoreDocumentModal(id) {
+  const docs = getStoredDocuments();
+  const doc = docs.find(d => d.id === id);
+  if (!doc) return;
+
+  const modal = document.getElementById('storeDocEditModal');
+  const hiddenId = document.getElementById('editDocIdHidden');
+  const titleInput = document.getElementById('editDocTitleInput');
+  const catSelect = document.getElementById('editDocCategorySelect');
+
+  if (!modal || !hiddenId || !titleInput || !catSelect) return;
+
+  hiddenId.value = doc.id;
+  titleInput.value = doc.title || doc.filename;
+  catSelect.value = doc.category || 'Franchise Agreement';
+
+  modal.style.display = 'flex';
+  if (typeof playBeep === 'function') playBeep('click');
+}
+
+function closeStoreDocEditModal() {
+  const modal = document.getElementById('storeDocEditModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function closeStoreDocEditModalOnBackdrop(e) {
+  if (e.target && e.target.id === 'storeDocEditModal') {
+    closeStoreDocEditModal();
+  }
+}
+
+function saveEditedStoreDocument() {
+  const hiddenId = document.getElementById('editDocIdHidden');
+  const titleInput = document.getElementById('editDocTitleInput');
+  const catSelect = document.getElementById('editDocCategorySelect');
+
+  if (!hiddenId || !titleInput || !catSelect) return;
+
+  const docId = hiddenId.value;
+  const newTitle = titleInput.value.trim();
+  const newCategory = catSelect.value;
+
+  if (!newTitle) {
+    if (typeof showToast === 'function') showToast('⚠️ Document title cannot be empty.');
+    return;
+  }
+
+  const docs = getStoredDocuments();
+  const docIndex = docs.findIndex(d => d.id === docId);
+  if (docIndex !== -1) {
+    docs[docIndex].title = newTitle;
+    docs[docIndex].category = newCategory;
+    saveStoredDocuments(docs);
+    renderStoreDocumentsList();
+    closeStoreDocEditModal();
+    if (typeof showToast === 'function') showToast('✅ Document details updated successfully!');
+  }
+}
+
+function handleStoreDocFileSelected(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const categorySelect = document.getElementById('storeDocCategorySelect');
+  const titleInput = document.getElementById('storeDocTitleInput');
+
+  const category = categorySelect ? categorySelect.value : 'Franchise Agreement';
+  const customTitle = titleInput && titleInput.value.trim() ? titleInput.value.trim() : file.name;
+
+  const sizeFormatted = file.size > 1024 * 1024
+    ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
+    : `${Math.round(file.size / 1024)} KB`;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const fileDataUrl = e.target.result;
+    const docs = getStoredDocuments();
+    const newDoc = {
+      id: 'doc-custom-' + Date.now(),
+      category: category,
+      title: customTitle,
+      filename: file.name,
+      size: sizeFormatted,
+      date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+      type: file.type || 'application/pdf',
+      verified: false,
+      fileData: fileDataUrl
+    };
+
+    docs.unshift(newDoc);
+    saveStoredDocuments(docs);
+    renderStoreDocumentsList();
+
+    if (titleInput) titleInput.value = '';
+    event.target.value = '';
+
+    if (typeof showToast === 'function') {
+      showToast(`✅ "${file.name}" uploaded to Store Documents vault!`);
+    }
+  };
+
+  reader.onerror = function() {
+    if (typeof showToast === 'function') {
+      showToast('⚠️ Failed to read uploaded file.');
+    }
+  };
+
+  reader.readAsDataURL(file);
+}
+
+// -------------------------------------------------------------------------
+// ⬇️ Download Document (Triggers download only)
+// -------------------------------------------------------------------------
+function downloadStoreDocument(id) {
+  const docs = getStoredDocuments();
+  const doc = docs.find(d => d.id === id);
+  if (!doc) return;
+
+  if (doc.fileData) {
+    const link = document.createElement('a');
+    link.href = doc.fileData;
+    link.download = doc.filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    if (typeof showToast === 'function') showToast(`📥 Downloading "${doc.filename}"`);
+  } else {
+    const sampleBlob = new Blob([
+      `SUGAR CUBES OFFICIAL STORE DOCUMENT ARCHIVE\n` +
+      `==========================================\n` +
+      `Category: ${doc.category}\n` +
+      `Document Title: ${doc.title}\n` +
+      `Filename: ${doc.filename}\n` +
+      `Date Registered: ${doc.date}\n` +
+      `Status: VERIFIED & ACTIVE IN STORE ARCHIVES\n\n` +
+      `Franchise Location: Store #1, Sugar Cubes Main Street\n` +
+      `Building Property Deed: Commercial Commercial Lease Sanctioned\n` +
+      `Authorized Signatory: Store Owner & Executive Management\n` +
+      `==========================================\n` +
+      `This document is certified on the POS terminal vault.`
+    ], { type: 'text/plain;charset=utf-8' });
+
+    const url = URL.createObjectURL(sampleBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = doc.filename.replace(/\.pdf$/i, '.txt');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    if (typeof showToast === 'function') showToast(`📥 Downloading "${doc.filename}"`);
+  }
+}
+
+// -------------------------------------------------------------------------
+// 🗑️ Delete Document
+// -------------------------------------------------------------------------
+function deleteStoreDocument(id) {
+  let docs = getStoredDocuments();
+  const docToDelete = docs.find(d => d.id === id);
+  const docName = docToDelete ? (docToDelete.title || docToDelete.filename) : 'Document';
+
+  if (!confirm(`Are you sure you want to delete "${docName}" from the store vault?`)) {
+    return;
+  }
+
+  docs = docs.filter(d => d.id !== id);
+  saveStoredDocuments(docs);
+  renderStoreDocumentsList();
+  if (typeof showToast === 'function') showToast(`🗑️ "${docName}" removed from vault`);
+}
+
 
 
 
