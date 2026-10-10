@@ -7358,9 +7358,24 @@ html.auth-pending .mobile-view-header {
     font-size: 1.45rem;
   }
 
-  /* Profile Modal Footer on Mobile: Remove redundant bottom back button, keeping top navigation header button */
+  /* Profile Modal Window & Lock Register Footer Dock on Mobile */
+  #userProfileModal .profile-modal-window {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100vh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+  }
+
   .profile-modal-body {
     flex: 1 1 auto !important;
+    min-height: 0 !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
     padding: 12px 14px max(14px, env(safe-area-inset-bottom)) !important;
@@ -7379,7 +7394,7 @@ html.auth-pending .mobile-view-header {
     width: 100% !important;
     box-sizing: border-box !important;
     box-shadow: 0 -4px 14px rgba(15, 23, 42, 0.08) !important;
-    z-index: 20 !important;
+    z-index: 50 !important;
   }
 
   .profile-modal-footer .btn-profile-close {
@@ -7388,12 +7403,16 @@ html.auth-pending .mobile-view-header {
 
   .btn-profile-logout-sm {
     width: 100% !important;
-    max-width: 320px !important;
-    height: 42px !important;
-    font-size: 0.88rem !important;
+    max-width: 360px !important;
+    height: 44px !important;
+    font-size: 0.90rem !important;
     font-weight: 800 !important;
     border-radius: 12px !important;
     justify-content: center !important;
+    background: #fff1f2 !important;
+    color: #be123c !important;
+    border: 1.5px solid #fecdd3 !important;
+    box-shadow: 0 2px 8px rgba(190, 18, 60, 0.12) !important;
   }
 }
 
@@ -7831,11 +7850,12 @@ html.auth-pending .mobile-view-header {
   }
 
   .profile-modal-header {
-    padding: max(12px, env(safe-area-inset-top)) 12px 10px !important;
+    padding: max(10px, env(safe-area-inset-top)) 14px 10px !important;
     position: -webkit-sticky !important;
     position: sticky !important;
     top: 0 !important;
     z-index: 100 !important;
+    background: #0f172a !important;
     transform: none !important;
     transition: none !important;
     animation: none !important;
@@ -7846,7 +7866,7 @@ html.auth-pending .mobile-view-header {
   }
 
   .profile-modal-top-row {
-    margin-bottom: 8px !important;
+    margin-bottom: 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
@@ -7854,6 +7874,21 @@ html.auth-pending .mobile-view-header {
     width: 100% !important;
     position: relative !important;
     z-index: 20 !important;
+  }
+
+  .prof-shift-action-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 99px !important;
+    padding: 5px 14px !important;
+    color: #ffffff !important;
+    font-size: 0.84rem !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18) !important;
   }
 
   .profile-user-summary {
